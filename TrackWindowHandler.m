@@ -195,8 +195,7 @@ enum TRACKWINDOW_STATE {
 			
 			if (_window) {
 				NSRect wr = [_window rect];
-				NSPoint p = NSMakePoint(wr.origin.x, wr.origin.y+wr.size.height);
-				[[_window image] dissolveToPoint:p fraction:0.8];
+                [[_window image] drawInRect:wr fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.8 respectFlipped:YES hints:nil];
 				[[NSColor grayColor] set];
 				NSFrameRectWithWidth(wr, 0.5);
 			}

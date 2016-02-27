@@ -273,7 +273,6 @@ enum WINDOW_STATE {
 		case STATE_SELECTED:
 			[self drawBackground:rect];
 			
-			NSPoint p;
 			NSRect w_rect;
 			
 			for (Window* window in [_selected_window_list reverseObjectEnumerator]) {
@@ -282,8 +281,7 @@ enum WINDOW_STATE {
 				[[NSColor clearColor] set];
 				NSRectFill(w_rect);
 				
-				p = NSMakePoint(w_rect.origin.x, w_rect.origin.y+w_rect.size.height);
-				[[window image] dissolveToPoint:p fraction:0.8];
+                [[window image] drawInRect:w_rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.8 respectFlipped:YES hints:nil];
 				[[NSColor grayColor] set];
 				NSFrameRectWithWidth(w_rect, 0.5);
 				
