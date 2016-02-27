@@ -391,6 +391,10 @@
 		4CFAD14F1012907B004EAF40 /* HotkeyTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotkeyTextView.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SimpleCap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleCap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA786A141C81BC5B0052EF8B /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		CA786A151C81BE140052EF8B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainMenu.strings; sourceTree = "<group>"; };
+		CA786A161C81C2D40052EF8B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CA786A171C81DFD20052EF8B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = de; path = de.lproj/Credits.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -785,6 +789,7 @@
 				zh_TW,
 				Italian,
 				Portuguese,
+				de,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* SimpleCap */;
 			projectDirPath = "";
@@ -979,6 +984,7 @@
 				4C5AEDF4112D85AC0085221A /* Italian */,
 				4C301BCF1131F0EA00B1A5B0 /* French */,
 				4CF8A21C113C8BC500C6FBD1 /* Portuguese */,
+				CA786A141C81BC5B0052EF8B /* de */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -992,6 +998,7 @@
 				4C5AED93112CF77A0085221A /* Italian */,
 				4C301BD01131F0F800B1A5B0 /* French */,
 				4CF8A213113C88E700C6FBD1 /* Portuguese */,
+				CA786A171C81DFD20052EF8B /* de */,
 			);
 			name = Credits.html;
 			sourceTree = "<group>";
@@ -1005,6 +1012,7 @@
 				4C5AED91112CF75A0085221A /* Italian */,
 				4C301BCD1131F0B700B1A5B0 /* French */,
 				4CF8A210113C887D00C6FBD1 /* Portuguese */,
+				CA786A151C81BE140052EF8B /* de */,
 			);
 			name = MainMenu.strings;
 			sourceTree = "<group>";
@@ -1018,6 +1026,7 @@
 				4C5AED90112CF7290085221A /* Italian */,
 				4C301BCE1131F0D100B1A5B0 /* French */,
 				4CF8A211113C888900C6FBD1 /* Portuguese */,
+				CA786A161C81C2D40052EF8B /* de */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
