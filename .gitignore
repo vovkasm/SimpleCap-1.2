@@ -9,3 +9,5 @@ build/
 *.perspectivev3
 *.mode1v3
 *.mode2v3
+SimpleCap.xcodeproj/xcuserdata
+SimpleCap.xcodeproj/project.xcworkspace/xcuserdata
