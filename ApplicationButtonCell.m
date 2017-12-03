@@ -13,16 +13,26 @@
 //#define ICON_SIZE		80
 //#define CELL_SIZE		82
 
+@implementation ApplicationButtonCell  {
+    NSImage* image;
+    NSString* name;
+    NSString* path;
+    NSUInteger cellState;
+}
+
+@synthesize image, name, cellState, path;
+
 #pragma mark -
 #pragma mark Initialization and Deallocation
-@implementation ApplicationButtonCell
-@synthesize image, name, cellState, path;
 
 -(id)initWithPath:(NSString*)appPath
 {
 	self = [super init];
 	if (self) {
-		LSCopyDisplayNameForURL((CFURLRef)[NSURL fileURLWithPath:appPath], (CFStringRef *)&name);
+        NSURL* url = [NSURL fileURLWithPath:appPath];
+        NSString* outName = nil;
+        [url getResourceValue:&outName forKey:NSURLLocalizedNameKey error:nil];
+        self.name = outName;
 		self.image = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
 		[image setSize:NSMakeSize(ICON_SIZE, ICON_SIZE)];
 		cellState = CELL_STATE_OFF;

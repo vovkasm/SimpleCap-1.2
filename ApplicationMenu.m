@@ -34,7 +34,11 @@
 	if (self) {
 		_path = [app_path retain];
 		
-		LSCopyDisplayNameForURL((CFURLRef)[NSURL fileURLWithPath:_path], (CFStringRef *)&_name);
+        CFStringRef name = nil;
+		LSCopyDisplayNameForURL((CFURLRef)[NSURL fileURLWithPath:_path], &name);
+        _name = (__bridge NSString*)name;
+        CFRelease(name);
+        
 		_image = [[[NSWorkspace sharedWorkspace] iconForFile:_path] retain];
 		[_image setSize:NSMakeSize(16, 16)];
 	}
@@ -79,9 +83,11 @@
 
 	// (1) default application
 	FSRef outAppRef;
-	NSURL* default_url = nil;
+	CFURLRef default_url_cf = nil;
 
-	LSGetApplicationForURL((CFURLRef)target_url, kLSRolesAll, &outAppRef, (CFURLRef*)&default_url);
+	LSGetApplicationForURL((__bridge CFURLRef)target_url, kLSRolesAll, &outAppRef, &default_url_cf);
+    NSURL* default_url = (__bridge_transfer NSURL*)default_url_cf;
+    
 	entry = [[[AppEntry alloc] initWithPath:[default_url path]] autorelease];
 	[item_list addObject:[self menuItemWithAppEntry:entry]];
 
@@ -94,7 +100,7 @@
 	
 
 	// (2) preffered applications
-	NSArray* app_list = [(NSArray*)LSCopyApplicationURLsForURL((CFURLRef)target_url, kLSRolesAll) autorelease];
+	NSArray* app_list = [(NSArray*)LSCopyApplicationURLsForURL((__bridge CFURLRef)target_url, kLSRolesAll) autorelease];
 	
 	NSMutableArray* entry_list = [NSMutableArray array];
 	

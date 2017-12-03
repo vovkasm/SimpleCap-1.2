@@ -13,13 +13,8 @@ enum {
 	CELL_STATE_OVER
 };
 
-@interface ApplicationButtonCell : NSCell {
+@interface ApplicationButtonCell : NSCell
 
-	NSImage* image;
-	NSString* name;
-	NSString* path;
-	NSUInteger cellState;
-}
 @property (retain) NSImage* image;
 @property (retain) NSString* name;
 @property (retain) NSString* path;
@@ -27,4 +22,5 @@ enum {
 
 -(id)initWithPath:(NSString*)appPath;
 +(ApplicationButtonCell*)cellWithPath:(NSString*)appPath;
+
 @end

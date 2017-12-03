@@ -153,38 +153,34 @@ static CGFloat dasharray[] = {3.0, 3.0};
 	return [self getWindowListWindowID:kCGNullWindowID];
 }
 
-NSInteger window_comparator(Window* window1, Window* window2, void *context)
-{
-	NSRect rect1 = [window1 rect];
-	NSRect rect2 = [window2 rect];
-
-	CGFloat v1, v2;
-
-	if ([(NSNumber*)context boolValue]) {
-		v1 = rect1.origin.x;
-		v2 = rect2.origin.x;
-	} else {
-		v1 = rect1.origin.y;
-		v2 = rect2.origin.y;
-	}
-	
-	if (v1 < v2) {
-		return NSOrderedAscending;
-	} else if (v1 > v2) {
-		return NSOrderedDescending;
-	} else {
-		return NSOrderedSame;
-	}
-}
-
 - (NSArray*)getSortedWindowListDirection:(BOOL)direction
 {
 	NSArray* list = [self getWindowList];
-	NSArray* sorted_list =
-	[list sortedArrayUsingFunction:window_comparator
-						   context:[NSNumber numberWithBool:direction]];
+    
+    NSArray* sorted = [list sortedArrayUsingComparator:^NSComparisonResult(Window*  _Nonnull window1, Window*  _Nonnull window2) {
+        NSRect rect1 = [window1 rect];
+        NSRect rect2 = [window2 rect];
+        
+        CGFloat v1, v2;
+        
+        if (direction) {
+            v1 = rect1.origin.x;
+            v2 = rect2.origin.x;
+        } else {
+            v1 = rect1.origin.y;
+            v2 = rect2.origin.y;
+        }
+        
+        if (v1 < v2) {
+            return NSOrderedAscending;
+        } else if (v1 > v2) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedSame;
+        }
+    }];
 	
-	return sorted_list;
+	return sorted;
 }
 
 - (CGImageRef)cgimageWithWindowList:(NSArray*)list cgrect:(CGRect)cgrect

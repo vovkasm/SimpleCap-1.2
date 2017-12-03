@@ -677,21 +677,20 @@
 - (BOOL)isEnableLoginItem
 {
 	BOOL is_enable = NO;
-	CFURLRef url = (CFURLRef)[NSURL fileURLWithPath: [[NSBundle mainBundle] bundlePath]];
 	LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
 	
 	UInt32 seedValue;
 	NSArray  *loginItemsArray = (NSArray *)LSSharedFileListCopySnapshot(loginItems, &seedValue);
 	for (id item in loginItemsArray)
 	{		
-		LSSharedFileListItemRef itemRef = (LSSharedFileListItemRef)item;
-		if (LSSharedFileListItemResolve(itemRef, 0, (CFURLRef*) &url, NULL) == noErr)
-		{
-			if ([[(NSURL *)url path] hasPrefix:[[NSBundle mainBundle] bundlePath]]) {
-				is_enable = YES;
-				break;
-			}
-		}
+        LSSharedFileListItemRef itemRef = (__bridge LSSharedFileListItemRef)item;
+        NSURL* url = (__bridge NSURL*)LSSharedFileListItemCopyResolvedURL(itemRef, 0, nil);
+        if (url) {
+            if ([url.path hasPrefix:[[NSBundle mainBundle] bundlePath]]) {
+                is_enable = YES;
+                break;
+            }
+        }
 	}
 	[loginItemsArray release];
 	CFRelease(loginItems);
@@ -715,16 +714,16 @@
 
 - (void)disableLoginItem
 {
-	CFURLRef url = (CFURLRef)[NSURL fileURLWithPath: [[NSBundle mainBundle] bundlePath]];
 	LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
 	UInt32 seedValue;
 	NSArray  *loginItemsArray = (NSArray *)LSSharedFileListCopySnapshot(loginItems, &seedValue);
 	for (id item in loginItemsArray)
 	{		
-		LSSharedFileListItemRef itemRef = (LSSharedFileListItemRef)item;
-		if (LSSharedFileListItemResolve(itemRef, 0, (CFURLRef*) &url, NULL) == noErr)
+        LSSharedFileListItemRef itemRef = (__bridge LSSharedFileListItemRef)item;
+        NSURL* url = (__bridge NSURL*)LSSharedFileListItemCopyResolvedURL(itemRef, 0, nil);
+		if (url)
 		{
-			if ([[(NSURL *)url path] hasPrefix:[[NSBundle mainBundle] bundlePath]]) {
+			if ([url.path hasPrefix:[[NSBundle mainBundle] bundlePath]]) {
 				LSSharedFileListItemRemove(loginItems, itemRef);
 				break;
 			}

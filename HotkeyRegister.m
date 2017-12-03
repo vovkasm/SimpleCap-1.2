@@ -36,7 +36,7 @@ static UInt32 _hotkey_id = 0;
 		
 		InstallApplicationEventHandler(
 			   &hotKeyHandler, GetEventTypeCount(eventTypeSpecList),
-			   eventTypeSpecList, self, NULL);
+			   eventTypeSpecList, (__bridge_retained void*)self, NULL);
 	}
 
 	return _hotkey_register;

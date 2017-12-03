@@ -2,23 +2,10 @@
 //  Hotkey.h
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import <Carbon/Carbon.h>
 
-@interface Hotkey : NSObject {
-
-	// Hotkey attrs
-	UInt32 _keyid;	//TODO: id
-	UInt32 _modifier;
-	UInt32 _code;
-	EventHotKeyRef _ref;
-	NSString* _savekey;
-	
-	// Handler attrs
-	id _target;
-
-	// keydown:(Hotkey*)hotkey;
-}
+@interface Hotkey : NSObject
 
 @property UInt32 keyid;
 @property UInt32 modifier;

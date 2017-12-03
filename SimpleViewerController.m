@@ -105,7 +105,7 @@ void fsevents_callback(
 			   eventIds[i], paths[i], eventFlags[i]);
 	}
 	 */
-	SimpleViewerController* svc = (SimpleViewerController*)userData;
+	SimpleViewerController* svc = (__bridge_transfer SimpleViewerController*)userData;
 	if ([svc isOpened] && [svc updateOpendFile]) {
 		[svc showMessage:NSLocalizedString(@"FileUpdated", @"")];
 	}
@@ -134,7 +134,7 @@ void fsevents_callback(
 	_fsevent_stream = FSEventStreamCreate(NULL,
 								 &fsevents_callback,
 								 &context,
-								 (CFArrayRef)pathsToWatch,
+                                          (__bridge CFArrayRef)pathsToWatch,
 								 kFSEventStreamEventIdSinceNow,
 								 latency,
 								 kFSEventStreamCreateFlagNone /* Flags explained in reference */

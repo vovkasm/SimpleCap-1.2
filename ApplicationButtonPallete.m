@@ -13,7 +13,13 @@
 
 #define LAYOUT_MARGIN	3.0
 
-@implementation ApplicationButtonPallete
+@implementation ApplicationButtonPallete {
+    ApplicationButtonMatrix* matrix;
+    NSView* contentView;
+    
+    id target;
+    SEL action;
+}
 
 @synthesize target, action;
 
@@ -121,7 +127,7 @@
 #pragma mark Event Handling
 -(void)click:(id)sender
 {
-	ApplicationButtonCell* selectedCell = [sender selectedCell];
+	__unsafe_unretained ApplicationButtonCell* selectedCell = [sender selectedCell];
 	NSInteger row, column;
 	[matrix getRow:&row column:&column ofCell:selectedCell];
 
@@ -132,6 +138,7 @@
 		[invocation setTarget:self.target];
 		[invocation setArgument:&row atIndex:2];
 		[invocation setArgument:&selectedCell atIndex:3];
+        [invocation retainArguments];
 		[invocation invoke];
 	}
 }

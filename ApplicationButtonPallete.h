@@ -8,15 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class ApplicationButtonMatrix;
-@interface ApplicationButtonPallete : NSObject {
+@interface ApplicationButtonPallete : NSObject
 
-	ApplicationButtonMatrix* matrix;
-	NSView* contentView;
-
-	id target;
-	SEL action;
-}
 @property (retain) id target;
 @property (assign) SEL action;
 

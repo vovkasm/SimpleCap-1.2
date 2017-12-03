@@ -6,7 +6,13 @@
 #import "Hotkey.h"
 #import <Carbon/Carbon.h>
 
-@implementation HotkeyTextView
+@implementation HotkeyTextView {
+    BOOL _is_editing;
+    Hotkey* _hotkey;
+    
+    id _target;
+}
+
 
 @synthesize target = _target;
 
@@ -101,15 +107,15 @@
 		_hotkey.modifier = modifier;
 		_hotkey.code = keycode;
 		
+        __unsafe_unretained Hotkey* localHotkey = _hotkey;
 		SEL selector = @selector(hotkeyShouldChange:);
-		NSMethodSignature* signature =
-			[[self.target class] instanceMethodSignatureForSelector:selector];
-		NSInvocation *invocation =
-			[NSInvocation invocationWithMethodSignature:signature];
+		NSMethodSignature* signature = [[self.target class] instanceMethodSignatureForSelector:selector];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 		BOOL result;
 		[invocation setSelector:selector];
 		[invocation setTarget:self.target];
-		[invocation setArgument:&_hotkey atIndex:2];
+		[invocation setArgument:&localHotkey atIndex:2];
+        [invocation retainArguments];
 		[invocation invoke];
 		[invocation getReturnValue:&result];
 

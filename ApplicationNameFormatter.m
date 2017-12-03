@@ -13,7 +13,7 @@
 - (NSString *)stringForObjectValue:(id)anObject
 {
 	NSString* name;
-	LSCopyDisplayNameForURL((CFURLRef)[NSURL fileURLWithPath:anObject], (CFStringRef *)&name);
+    [[NSURL fileURLWithPath:anObject] getResourceValue:&name forKey:NSURLLocalizedNameKey error:nil];
 	
 	if (!name) {
 		name = @"(not found)";
