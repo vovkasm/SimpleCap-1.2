@@ -3,7 +3,7 @@
 //
 
 #import "HotkeyRegister.h"
-#import "HotKey.h"
+#import "Hotkey.h"
 #define SC_HOTKEY_SIGNATURE	'schk'
 
 OSStatus hotKeyHandler(EventHandlerCallRef nextHandler, EventRef theEvent, void *userData);
