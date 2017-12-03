@@ -16,7 +16,7 @@ enum {
 	SCStateCapturing
 };
 
-@interface AppController : NSObject <NSMenuDelegate>
+@interface AppController : NSObject <NSApplicationDelegate, NSMenuDelegate>
 
 - (void)setMenuTitle:(NSString*)title;
 - (void)startCapture;
