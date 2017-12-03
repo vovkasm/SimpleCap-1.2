@@ -8,10 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol LaunchedApplicationsDelegate
+
+- (void)selectApplication:(id)sender;
+
+@end
 
 @interface LaunchedApplications : NSObject
 
-- (instancetype)initWithDelegate:(id)delegate;
+@property (nonatomic, weak) id<LaunchedApplicationsDelegate> delegate;
+
+- (instancetype)initWithDelegate:(id<LaunchedApplicationsDelegate>)delegate;
 - (void)updateApplicationMenu:(NSMenu*)menu;
 
 @end

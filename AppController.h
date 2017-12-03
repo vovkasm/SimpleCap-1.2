@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "LaunchedApplications.h"
+
 @class FileManager;
 @class SimpleViewerController;
 
@@ -16,7 +18,7 @@ enum {
 	SCStateCapturing
 };
 
-@interface AppController : NSObject <NSApplicationDelegate, NSMenuDelegate>
+@interface AppController : NSObject <LaunchedApplicationsDelegate, NSApplicationDelegate, NSMenuDelegate>
 
 - (void)setMenuTitle:(NSString*)title;
 - (void)startCapture;

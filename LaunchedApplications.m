@@ -8,12 +8,9 @@
 
 #import "LaunchedApplications.h"
 
-@implementation LaunchedApplications {
-    id _delegate;
-}
+@implementation LaunchedApplications
 
-- (id)initWithDelegate:(id)delegate
-{
+- (instancetype)initWithDelegate:(id<LaunchedApplicationsDelegate>)delegate {
     self = [super init];
     if (self) {
         _delegate = delegate;
@@ -21,19 +18,8 @@
     return self;
 }
 
-
-- (void)clearMenu:(NSMenu*)menu
-{
-    NSInteger i;
-    NSInteger num = [menu numberOfItems];
-    for (i=0; i < num; i++) {
-        [menu removeItemAtIndex:0];
-    }
-}
-
--(void)updateApplicationMenu:(NSMenu*)menu
-{
-    [self clearMenu:menu];
+- (void)updateApplicationMenu:(NSMenu*)menu {
+    [menu removeAllItems];
     NSWorkspace* ws = [NSWorkspace sharedWorkspace];
     for (NSDictionary* app in [ws launchedApplications]) {
         NSString* name = [app objectForKey:@"NSApplicationName"];
