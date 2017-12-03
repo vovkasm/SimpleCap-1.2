@@ -73,7 +73,7 @@
 {
     _count++;
     float max_count = [_totalSec floatValue] * [_framePerSec floatValue];
-    NSLog(@"count=%d", _count);
+    NSLog(@"count=%ld", (long)_count);
     if (_count > max_count) {
         [theTimer invalidate];
         _finished = YES;

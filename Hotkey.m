@@ -213,7 +213,7 @@ _keymap[] = {
 
 - (NSString*)dump
 {
-	NSString* desc = [NSString stringWithFormat:@"keyid=%x, modifier=%x, code=%x, ref=%x, \n target=%@", self.keyid, self.modifier, self.code, self.ref, self.target];
+	NSString* desc = [NSString stringWithFormat:@"keyid=%x, modifier=%x, code=%x, ref=%p, \n target=%@", self.keyid, self.modifier, self.code, self.ref, self.target];
 
 	return desc;
 }
@@ -243,16 +243,16 @@ _keymap[] = {
 	NSString* key_desc = @"";
 	
 	if (self.modifier & controlKey) {
-		key_desc = [key_desc stringByAppendingFormat:@"%C", kControlUnicode];
+		key_desc = [key_desc stringByAppendingFormat:@"%C", (unsigned short)kControlUnicode];
 	}
 	if (self.modifier & optionKey) {
-		key_desc = [key_desc stringByAppendingFormat:@"%C", kOptionUnicode];
+		key_desc = [key_desc stringByAppendingFormat:@"%C", (unsigned short)kOptionUnicode];
 	}
 	if (self.modifier & cmdKey) {
-		key_desc = [key_desc stringByAppendingFormat:@"%C", kCommandUnicode];
+		key_desc = [key_desc stringByAppendingFormat:@"%C", (unsigned short)kCommandUnicode];
 	}
 	if (self.modifier & shiftKey) {
-		key_desc = [key_desc stringByAppendingFormat:@"%C", kShiftUnicode];
+		key_desc = [key_desc stringByAppendingFormat:@"%C", (unsigned short)kShiftUnicode];
 	}
 	key_desc = [key_desc stringByAppendingFormat:@"%s", _keymap[[self indexOfKeymap]].string];
 	
