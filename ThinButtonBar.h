@@ -19,27 +19,8 @@ enum SC_BUTTON_POSITION {
 
 
 @class ThinButton;
-@interface ThinButtonBar : NSView {
 
-	NSMutableArray*			_list;
-	NSMutableDictionary*	_group_list;
-	CGFloat					_offsetX;
-	CGFloat					_offsetY;
-	NSTrackingArea*			_tracking_area;
-	id						_delegate;
-	ThinButton*				_pushed_button;
-	int						_position;
-	
-	BOOL					_is_shadow;
-	CGFloat					_marginY;
-	NSPoint					_draw_offset;
-	BOOL					_popup_menu_mode;
-	
-	BOOL					_while_flasher;
-	float					_flasher_alpha;
-	NSTimer*				_flasher_timer;
-	int						_flasher_step;
-}
+@interface ThinButtonBar : NSView
 
 - (void)addButtonWithImageResource:(NSString*)resource alterImageResource:(NSString*)resource2 tag:(UInt)tag tooltip:(NSString*)tooltip group:(NSString*)group isActOnMouseDown:(BOOL)is_act_mouse_down;
 - (void)setDelegate:(id)delegate;

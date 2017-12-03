@@ -12,12 +12,30 @@
 
 #define TB_MARGIN_WIDTH    2.0
 
-@implementation ThinButtonBar
+@implementation ThinButtonBar {
+    NSMutableArray*            _list;
+    NSMutableDictionary*    _group_list;
+    CGFloat                    _offsetX;
+    CGFloat                    _offsetY;
+    NSTrackingArea*            _tracking_area;
+    id                        _delegate;
+    ThinButton*                _pushed_button;
+    int                        _position;
+    
+    BOOL                    _is_shadow;
+    CGFloat                    _marginY;
+    NSPoint                    _draw_offset;
+    BOOL                    _popup_menu_mode;
+    
+    BOOL                    _while_flasher;
+    float                    _flasher_alpha;
+    NSTimer*                _flasher_timer;
+    int                        _flasher_step;
+}
 
 static NSShadow* _shadow = nil;
 
--(id)initWithFrame:(NSRect)frame
-{
+- (instancetype)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         _list = [[NSMutableArray alloc] init];
@@ -46,14 +64,13 @@ static NSShadow* _shadow = nil;
     return self;
 
 }
-- (void)setDrawOffset:(NSPoint)offset
-{
+
+- (void)setDrawOffset:(NSPoint)offset {
     _draw_offset = offset;
 }
 
 #define SIZE_MARGIN    3
-- (void)addButtonWithImageResource:(NSString*)resource alterImageResource:(NSString*)resource2 tag:(UInt)tag tooltip:(NSString*)tooltip group:(NSString*)group isActOnMouseDown:(BOOL)is_act_mouse_down;
-{
+- (void)addButtonWithImageResource:(NSString*)resource alterImageResource:(NSString*)resource2 tag:(UInt)tag tooltip:(NSString*)tooltip group:(NSString*)group isActOnMouseDown:(BOOL)is_act_mouse_down {
     //
     // setup ThinButton object
     //
@@ -148,8 +165,7 @@ static NSShadow* _shadow = nil;
 }
 
 
-- (void) dealloc
-{
+- (void)dealloc {
     [self removeAllToolTips];
 
     if (_tracking_area) {
@@ -204,32 +220,11 @@ static NSShadow* _shadow = nil;
                      operation:NSCompositeSourceOver
                       fraction:alpha];
         }
-        /*
-    CGFloat alpha;
-    for (ThinButton *button in _list) {
-        switch ([button state]) {
-            case TB_STATE_NORMAL:
-                alpha =  0.75;
-                break;
-            case TB_STATE_OVER:
-                alpha = 1.0;
-                break;
-            case TB_STATE_PUSHED:
-                alpha = 0.75;
-                break;
-        }
-        
-        [[button image] drawAtPoint:[button frame].origin
-                           fromRect:NSZeroRect
-                          operation:NSCompositeSourceOver
-                           fraction:alpha];
-    */
     }
     [NSGraphicsContext restoreGraphicsState];
 }
 
-- (ThinButton*)changeState:(UInt)state withEvent:(NSEvent*)theEvent
-{
+- (ThinButton *)changeState:(UInt)state withEvent:(NSEvent*)theEvent {
     NSPoint p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     ThinButton* hitButton = nil;
     for (ThinButton* button in _list) {
@@ -245,7 +240,6 @@ static NSShadow* _shadow = nil;
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-
     [self changeState:TB_STATE_OVER withEvent:theEvent];
 }
 
@@ -259,8 +253,7 @@ static NSShadow* _shadow = nil;
     [self changeState:TB_STATE_OVER withEvent:theEvent];
 }
 
-- (void)exchangeButtonFrom:(ThinButton*)old To:(ThinButton*)new
-{
+- (void)exchangeButtonFrom:(ThinButton*)old To:(ThinButton*)new {
     NSUInteger i;
     for (i=0; i < [_list count]; i++) {
         if ([_list objectAtIndex:i] == old) {
@@ -270,8 +263,7 @@ static NSShadow* _shadow = nil;
     }
 }
 
-- (void)resetGroup:(NSString*)group
-{
+- (void)resetGroup:(NSString*)group {
     NSArray* group_array = [_group_list objectForKey:group];
     if (group_array && [group_array count] > 0) {
         ThinButton *new = [group_array objectAtIndex:0];
@@ -284,8 +276,8 @@ static NSShadow* _shadow = nil;
         }
     }
 }
-- (void)switchGroup:(NSString*)group
-{
+
+- (void)switchGroup:(NSString*)group {
     NSArray* group_array = [_group_list objectForKey:group];
     
     if (group_array) {
@@ -320,84 +312,29 @@ static NSShadow* _shadow = nil;
 //--------------------
 // Menu handlings -->
 //--------------------
-- (void)setPopupMenuMode:(BOOL)mode
-{
+- (void)setPopupMenuMode:(BOOL)mode {
     _popup_menu_mode = mode;
 }
-
-/*
-- (void)selectMenuItem:(NSMenuItem *)menu_item
-{
-    [_delegate performSelector:@selector(selectMenuAtTag:atIndex:)
-                    withObject:[menu_item representedObject]
-                    withObject:[NSNumber numberWithInt:[menu_item tag]]];
-}
-*/
-
-/*
-- (void)displayMenuWithTag:(UInt)tag event:(NSEvent*)theEvent
-{
-    NSNumber* tag_number = [NSNumber numberWithInt:tag];
-    NSArray* list = [_delegate performSelector:@selector(menuWithTag:) 
-                                    withObject:tag_number];
-    NSMenu* menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-    NSMenuItem* item;
-    NSInteger idx = 0;
-    
-    for (NSString* title in list) {
-        item = [[[NSMenuItem alloc] initWithTitle:title
-                                           action:@selector(selectMenuItem:)
-                                    keyEquivalent:@""] autorelease];
-        [item setTag:idx++];
-        [item setRepresentedObject:tag_number];
-        [menu addItem:item];
-    }
-    if (idx == 0) {
-        [menu insertItemWithTitle:NSLocalizedString(@"SelectionHistoryNone", @"")
-                           action:nil
-                    keyEquivalent:@""
-                          atIndex:0];
-    }
-
-    [NSMenu popUpContextMenu:menu withEvent:theEvent forView:self];
-}
-*/
 
 //--------------------
 // <-- Menu Handlings
 //--------------------
 
-- (void)actButton:(ThinButton*)button withEvent:(NSEvent*)theEvent
-{
-    
+- (void)actButton:(ThinButton*)button withEvent:(NSEvent*)theEvent {
     if (button == _pushed_button) {
         if (button && [_delegate respondsToSelector:@selector(clickedAtTag:event:)]) {
             [_delegate performSelector:@selector(clickedAtTag:event:) 
                             withObject:[NSNumber numberWithInt:[button tag]]
                             withObject:theEvent];
-            //            [self switchGroup:[hitButton group]];
         }
     }
 }
-- (void)mouseDown:(NSEvent *)theEvent {
 
+- (void)mouseDown:(NSEvent *)theEvent {
     _pushed_button = [self changeState:TB_STATE_PUSHED withEvent:theEvent];
     if ([_pushed_button isActOnMouseDown]) {
         [self actButton:_pushed_button withEvent:theEvent];
     }
-
-    /*
-    if (_popup_menu_mode) {
-        ThinButton *hitButton = [self changeState:TB_STATE_OVER withEvent:theEvent];
-        if (hitButton && [_delegate respondsToSelector:@selector(menuWithTag:)]) {
-            [self switchGroup:[hitButton group]];
-            [self displayMenuWithTag:[hitButton tag] event:theEvent];
-        }
-        _pushed_button = nil;
-    } else {
-        _pushed_button = [self changeState:TB_STATE_PUSHED withEvent:theEvent];
-    }
-     */
 }
 
 
@@ -411,25 +348,21 @@ static NSShadow* _shadow = nil;
     _pushed_button = nil;
 }
 
-- (void)setDelegate:(id)delegate
-{
+- (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
-- (BOOL)isFlipped
-{
+- (BOOL)isFlipped {
     return YES;
 }
 
-- (void)setFrameOrigin:(NSPoint)p
-{
-    p.x = floor(p.x);
-    p.y = floor(p.y);
+- (void)setFrameOrigin:(NSPoint)p {
+    p.x = floorf(p.x);
+    p.y = floorf(p.y);
     [super setFrameOrigin:p];
 }
 
-- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData
-{
+- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
     for(ThinButton* button in _list) {
         if (NSPointInRect(point, [button frame])) {
             return [button tooltip];
@@ -438,8 +371,7 @@ static NSShadow* _shadow = nil;
     return @"non";
 }
 
-- (void)reset
-{
+- (void)reset {
     _pushed_button = nil;
     _while_flasher = NO;
     for (ThinButton *button in _list) {
@@ -450,8 +382,7 @@ static NSShadow* _shadow = nil;
 
 #define SBBF_MARGIN 10.0
 #define BUTTON_OFFSET 10.0
--(void)setButtonBarWithFrame:(NSRect)frame
-{
+-(void)setButtonBarWithFrame:(NSRect)frame {
     NSPoint p;
     NSSize button_size = [self bounds].size;
     
@@ -520,37 +451,31 @@ static NSShadow* _shadow = nil;
     [self setFrameOrigin:p];
 }
 
--(void)setPosition:(int)position
-{
+-(void)setPosition:(int)position {
     _position = position;
 }
 
-- (void)show
-{
+- (void)show {
     [self setHidden:NO];
 }
-- (void)hide
-{
+
+- (void)hide {
     [self reset];
     [self setHidden:YES];
 }
 
-- (void)setShadow:(BOOL)is_shadow
-{
+- (void)setShadow:(BOOL)is_shadow {
     _is_shadow = is_shadow;
 }
 
-- (void)setMarginY:(CGFloat)marginY
-{
+- (void)setMarginY:(CGFloat)marginY {
     _marginY = marginY;
 }
 
-- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
-{
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
     return YES;
 }
-- (BOOL)mouseDownCanMoveWindow
-{
+- (BOOL)mouseDownCanMoveWindow {
     return NO;
 }
 
@@ -559,8 +484,7 @@ static NSShadow* _shadow = nil;
 //-----------------
 #define    FLASHER_INTERVAL    0.05
 #define    FLASHER_FRAMES        10.0
-- (void)flasherAnimate:(NSTimer*)timer
-{
+- (void)flasherAnimate:(NSTimer*)timer {
     // do it
     [self setNeedsDisplay:YES];
     
@@ -578,8 +502,7 @@ static NSShadow* _shadow = nil;
     }
 }
 
-- (void)startFlasher
-{
+- (void)startFlasher {
     if (_while_flasher) {
         if ([_flasher_timer isValid]) {
             [_flasher_timer invalidate];
@@ -596,13 +519,11 @@ static NSShadow* _shadow = nil;
     [[NSRunLoop mainRunLoop] addTimer:_flasher_timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)update
-{
+- (void)update {
     [self setNeedsDisplay:YES];
 }
 
-- (NSSize)size
-{
+- (NSSize)size {
     return NSMakeSize(_offsetX, _offsetY);
 }
 
