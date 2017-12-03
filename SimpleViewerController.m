@@ -67,6 +67,7 @@ enum SV_TAG {
     
     ApplicationMenu* _app_menu;
     
+    // TODO(vovkasm): reimplement with NSTextFieldDelegate
     FilenameTextField* _filename_textfiled;
     
     IBOutlet NSMenu* _capture_menu;
@@ -620,7 +621,7 @@ void fsevents_callback(
 // handling buttons
 -(void)clickedAtTag:(NSNumber*)tag event:(NSEvent*)event {
     if ([_filename_textfiled isEditing]) {
-        [_filename_textfiled textDidEndEditing:nil];
+        [_filename_textfiled abortEditing];
     }
 
     NSString* other_filename;

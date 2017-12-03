@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class SimpleViewerController;
+
 @interface FilenameTextField : NSTextField
 
 - (id)initWithController:(SimpleViewerController*)controller;
