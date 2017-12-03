@@ -44,7 +44,7 @@
 	
 	lx1 = cx1 - sx1;
 //TODO	ly1 = cy1 + (sy2 - sh);
-	ly1 = cy1 + fabsf(sy2 - sh);
+	ly1 = cy1 + fabsf((float)(sy2 - sh));
 	return NSMakePoint(lx1, ly1);
 }
 @end

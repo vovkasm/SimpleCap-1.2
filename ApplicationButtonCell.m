@@ -84,7 +84,7 @@
     // draw it
     [controlView lockFocus];
 
-    CGFloat image_fraction;
+    CGFloat image_fraction = 1.0;
     NSBezierPath* bp;
     switch (self.cellState) {
         case CELL_STATE_OFF:
