@@ -23,7 +23,26 @@ enum TIMER_STATE {
 
 #define TC_BUTTON_MARGIN_Y1 -12
 #define TC_BUTTON_MARGIN_Y2 -17
-@implementation TimerController
+@implementation TimerController {
+    int                _state;
+    NSTimeInterval    _interval;        // [sec]
+    int                _times;            // [sec]
+    int                _count;            // 1sec
+    int                _count_dec;        // 1/10sec
+    id<TimerClient>    _client;
+    NSTimer*        _timer;
+    NSString*        _title;
+    
+    ThinButtonBar*        _button_bar;
+    ThinButtonBar*        _button_bar2;
+    TimerWindow*        _window;
+    TimerWindowView*    _view;
+    
+    NSImage*            _image;
+    
+    BOOL                _is_copy;
+    BOOL                _is_continuous;
+}
 
 - (void)reset
 {
@@ -107,7 +126,7 @@ enum TIMER_STATE {
         
         [_button_bar setMarginY:TC_BUTTON_MARGIN_Y1];
         [_view addSubview:_button_bar];
-        [_button_bar setDelegate:self];
+        _button_bar.delegate = self;
         [_button_bar setPosition:SC_BUTTON_POSITION_RIGHT_BOTTOM];
         [_button_bar setButtonBarWithFrame:[_view frame]];
         

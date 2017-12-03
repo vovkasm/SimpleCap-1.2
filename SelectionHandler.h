@@ -10,8 +10,9 @@
 #import "HandlerBase.h"
 #import "Handler.h"
 #import "TimerClient.h"
+#import "ThinButtonBar.h"
 
-@interface SelectionHandler : HandlerBase <Handler, TimerClient>
+@interface SelectionHandler : HandlerBase <ThinButtonBarDelegate, Handler, TimerClient>
 
 -(void)setRubberBandFrame:(NSRect)frame;
 

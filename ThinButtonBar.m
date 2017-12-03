@@ -18,7 +18,6 @@
     CGFloat                    _offsetX;
     CGFloat                    _offsetY;
     NSTrackingArea*            _tracking_area;
-    id                        _delegate;
     ThinButton*                _pushed_button;
     int                        _position;
     
@@ -62,7 +61,6 @@ static NSShadow* _shadow = nil;
         _while_flasher = NO;
     }
     return self;
-
 }
 
 - (void)setDrawOffset:(NSPoint)offset {
@@ -346,10 +344,6 @@ static NSShadow* _shadow = nil;
         [self actButton:hitButton withEvent:theEvent];
     }
     _pushed_button = nil;
-}
-
-- (void)setDelegate:(id)delegate {
-    _delegate = delegate;
 }
 
 - (BOOL)isFlipped {

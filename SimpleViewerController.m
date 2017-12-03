@@ -284,13 +284,13 @@ void fsevents_callback(
         [content_view addSubview:_button_bar];            // must be top of view hierarchy
         [content_view addSubview:_button_bar2];
         
-        [_button_bar setDelegate:self];
+        _button_bar.delegate = self;
         [_button_bar setPosition:SC_BUTTON_POSITION_LEFT_TOP];
         [_button_bar setDrawOffset:NSMakePoint(-BUTTON_MARGIN_LEFT, -BUTTON_MARGIN_BOTTOM)];
         [_button_bar setButtonBarWithFrame:[content_view frame]];
         [_button_bar show];
 
-        [_button_bar2 setDelegate:self];
+        _button_bar2.delegate = self;
         [_button_bar2 setPosition:SC_BUTTON_POSITION_RIGHT_TOP];
         [_button_bar2 setDrawOffset:NSMakePoint(0, -BUTTON_MARGIN_BOTTOM)];
         [_button_bar2 setButtonBarWithFrame:[content_view frame]];

@@ -10,7 +10,8 @@
 #import "HandlerBase.h"
 #import "Handler.h"
 #import "TimerClient.h"
+#import "ThinButtonBar.h"
 
-@interface WindowHandler : HandlerBase <Handler, TimerClient> 
+@interface WindowHandler : HandlerBase <ThinButtonBarDelegate, Handler, TimerClient> 
 
 @end

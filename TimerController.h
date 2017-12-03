@@ -8,31 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TimerClient.h"
+#import "ThinButtonBar.h"
 
 @class ThinButtonBar;
 @class TimerWindow;
 @class TimerWindowView;
-@interface TimerController : NSObject {
 
-	int				_state;
-	NSTimeInterval	_interval;		// [sec]
-	int				_times;			// [sec]
-	int				_count;			// 1sec
-	int				_count_dec;		// 1/10sec
-	id<TimerClient>	_client;
-	NSTimer*		_timer;
-	NSString*		_title;
+@interface TimerController : NSObject <ThinButtonBarDelegate>
 
-	ThinButtonBar*		_button_bar;
-	ThinButtonBar*		_button_bar2;
-	TimerWindow*		_window;
-	TimerWindowView*	_view;
-	
-	NSImage*			_image;
-	
-	BOOL				_is_copy;
-	BOOL				_is_continuous;
-}
 - (void)start;
 - (void)pause;
 - (void)cancel;

@@ -20,10 +20,17 @@ enum SC_BUTTON_POSITION {
 
 @class ThinButton;
 
+@protocol ThinButtonBarDelegate <NSObject>
+
+- (void)clickedAtTag:(NSNumber*)tag event:(NSEvent*)event;
+
+@end
+
 @interface ThinButtonBar : NSView
 
+@property (nonatomic, weak) id<ThinButtonBarDelegate> delegate;
+
 - (void)addButtonWithImageResource:(NSString*)resource alterImageResource:(NSString*)resource2 tag:(UInt)tag tooltip:(NSString*)tooltip group:(NSString*)group isActOnMouseDown:(BOOL)is_act_mouse_down;
-- (void)setDelegate:(id)delegate;
 - (void)reset;
 - (void)setButtonBarWithFrame:(NSRect)frame;
 - (void)setPosition:(int)position;

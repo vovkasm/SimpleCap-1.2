@@ -9,8 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 #import "ApplicationMenu.h"
+#import "ThinButtonBar.h"
 
-@interface SimpleViewerController : NSObject <ApplicationMenuDelegate, NSMenuDelegate, NSWindowDelegate, NSTextFieldDelegate>
+@interface SimpleViewerController : NSObject <ApplicationMenuDelegate, ThinButtonBarDelegate, NSMenuDelegate, NSWindowDelegate, NSTextFieldDelegate>
 
 - (void)close;
 - (void)show;

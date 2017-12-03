@@ -101,7 +101,7 @@ enum TRACKWINDOW_STATE {
                            isActOnMouseDown:NO];
     [_tool_window setFrame:[_button_bar frame] display:NO];
     [_tool_window setContentView:_button_bar];
-    [_button_bar setDelegate:self];
+    _button_bar.delegate = self;
     _is_display_selection = YES;
 }
                     

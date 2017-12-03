@@ -220,7 +220,7 @@ enum SELECTION_STATE {
     CaptureView *view = [self.captureController view];
     [view addSubview:_button_bar];
     [view addSubview:_button_bar2];
-    [_button_bar setDelegate:self];
+    _button_bar.delegate = self;
     //[_button_bar2 setDelegate:self];
     
     _previous_state = STATE_RUBBERBAND;

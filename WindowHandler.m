@@ -138,7 +138,7 @@ enum WINDOW_STATE {
     
     CaptureView *view = [self.captureController view];
     [view addSubview:_button_bar];
-    [_button_bar setDelegate:self];
+    _button_bar.delegate = self;
     
     _button_bar2 = [[ThinButtonBar alloc] initWithFrame:NSZeroRect];
     
@@ -157,7 +157,7 @@ enum WINDOW_STATE {
                             isActOnMouseDown:NO];
     
     [view addSubview:_button_bar2];
-    [_button_bar2 setDelegate:self];
+    _button_bar2.delegate = self;
     
 
     // setup array
@@ -380,7 +380,7 @@ enum WINDOW_STATE {
                                 cgrect:CGRectNull];
 }
 
--(void)clickedAtTag:(NSNumber*)tag  event:(NSEvent*)event
+- (void)clickedAtTag:(NSNumber*)tag  event:(NSEvent*)event
 {
     switch ([tag intValue]) {
         case TAG_CANCEL:
