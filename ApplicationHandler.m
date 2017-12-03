@@ -11,7 +11,11 @@
 #import "TimerController.h"
 #import "Window.h"
 
-@implementation ApplicationHandler
+@implementation ApplicationHandler {
+    ThinButtonBar*    _button_bar;
+    NSMutableArray* _app_windows;
+    id _application;
+}
 
 // for protocol
 - (void)reset
@@ -27,9 +31,9 @@
 - (BOOL)startWithObject:(id)object
 {
 	_application = [object retain];
-	[_capture_controller disableMouseEventInWindow];
-	_animation_counter = 0;
-	[_capture_controller startTimerOnClient:self
+	[self.captureController disableMouseEventInWindow];
+	[self setAnimationCounter:0];
+	[self.captureController startTimerOnClient:self
 									  title:[_application objectForKey:@"name"]
 									  image:[_application objectForKey:@"image"]];
 	return YES;
@@ -44,7 +48,7 @@
 - (void)tearDown
 {
 	[_application release];
-	[_capture_controller enableMouseEventInWindow];
+	[self.captureController enableMouseEventInWindow];
 	[_app_windows removeAllObjects];
 }
 
@@ -96,8 +100,8 @@
 
 - (void)timerCounted:(TimerController*)controller
 {
-	_animation_counter++;
-	CaptureView* view = [_capture_controller view];
+	[self incrementAnimationCounter];
+	CaptureView* view = [self.captureController view];
 	[view setNeedsDisplay:YES];
 }
 
@@ -111,32 +115,32 @@
 	[_capture_controller exit];
 	 */
 	if ([controller isCopy]) {
-		[_capture_controller copyImage:[self capture]
+		[self.captureController copyImage:[self capture]
 		   withMouseCursorInWindowList:_app_windows
 							imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
-		[_capture_controller exit];
+		[self.captureController exit];
 		
 	} else if ([controller isContinous]) {
-		[_capture_controller setContinouslyFlag:YES];
-		[_capture_controller saveImage:[self capture]
+		[self.captureController setContinouslyFlag:YES];
+		[self.captureController saveImage:[self capture]
 		   withMouseCursorInWindowList:_app_windows
 							imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
 		[controller start];
 		
 	} else {
 		// NORMAL
-		[_capture_controller saveImage:[self capture]
+		[self.captureController saveImage:[self capture]
 		   withMouseCursorInWindowList:_app_windows
 							imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
-		[_capture_controller openViewerWithLastfile];
-		[_capture_controller exit];
+		[self.captureController openViewerWithLastfile];
+		[self.captureController exit];
 	}
 	
 }
 
 - (void)timerCanceled:(TimerController*)controller
 {
-	[_capture_controller cancel];
+	[self.captureController cancel];
 }
 
 - (void)timerPaused:(TimerController*)controller
@@ -149,7 +153,7 @@
 
 - (void)openConfigMenuWithView:(NSView*)view event:(NSEvent*)event
 {
-	[_capture_controller openWindowConfigMenuWithView:view event:event];
+	[self.captureController openWindowConfigMenuWithView:view event:event];
 }
 
 

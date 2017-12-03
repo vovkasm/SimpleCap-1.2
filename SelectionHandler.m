@@ -40,12 +40,34 @@ enum SELECTION_STATE {
 	STATE_SELECTION
 };
 
-@implementation SelectionHandler
+@implementation SelectionHandler  {
+    NSRect _rect;
+    id _delegate;
+    NSShadow *_shadow;
+    CGFloat _resize_unit;
+    
+    int _state;
+    int _previous_state;
+    
+    BOOL _is_display_info;
+    BOOL _display_info;
+    
+    BOOL _display_imageformat;
+    
+    ThinButtonBar *_button_bar;        // operation buttons
+    ThinButtonBar *_button_bar2;    // size history
+    
+    BOOL _display_knob;
+    
+    //    SelectionHistory* _selection_history;
+    
+    NSSize _mouse_pointer_offset;
+}
 
 -(void)changeState:(int)state
 {
 	_state = state;
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 
 	switch (_state) {
 		case STATE_CLEAR:
@@ -56,7 +78,7 @@ enum SELECTION_STATE {
 			_display_knob = NO;
 			_display_info = NO;
 			_display_imageformat = NO;
-			[_capture_controller enableMouseEventInWindow];
+			[self.captureController enableMouseEventInWindow];
 			break;
 			
 		case STATE_RUBBERBAND:
@@ -68,7 +90,7 @@ enum SELECTION_STATE {
 			_display_info = YES;
 			_display_imageformat = YES;
 			[view setNeedsDisplay:YES];
-			[_capture_controller enableMouseEventInWindow];
+			[self.captureController enableMouseEventInWindow];
 			break;
 			
 		case STATE_SELECTION:
@@ -78,7 +100,7 @@ enum SELECTION_STATE {
 			_display_info = YES;
 			_display_imageformat = NO;
 			[view setNeedsDisplay:YES];
-			[_capture_controller disableMouseEventInWindow];
+			[self.captureController disableMouseEventInWindow];
 			break;
 
 		default:
@@ -132,7 +154,7 @@ enum SELECTION_STATE {
 					   (screen_size.height - START_HEIGHT)/2,
 					   START_WIDTH, START_HEIGHT);
 	NSPoint bp = NSZeroPoint;
-	bp = [[_capture_controller view] convertPoint:[[_capture_controller window] convertScreenToBase:NSMakePoint(0, screen_size.height)] fromView:nil];
+	bp = [[self.captureController view] convertPoint:[[self.captureController window] convertScreenToBase:NSMakePoint(0, screen_size.height)] fromView:nil];
 	_rect.origin.x += bp.x;
 	_rect.origin.y += bp.y;
 }
@@ -195,7 +217,7 @@ enum SELECTION_STATE {
 	
 	[self drawInformation];	// dummy call (adjust offset)
 
-	CaptureView *view = [_capture_controller view];
+	CaptureView *view = [self.captureController view];
 	[view addSubview:_button_bar];
 	[view addSubview:_button_bar2];
 	[_button_bar setDelegate:self];
@@ -212,7 +234,7 @@ enum SELECTION_STATE {
 
 - (void)resetCursorRects
 {
-	CaptureView *view = [_capture_controller view];
+	CaptureView *view = [self.captureController view];
 	[view discardCursorRects];
 	
 	NSCursor* crosshairCursor       = [NSCursor crosshairCursor];
@@ -298,7 +320,7 @@ enum SELECTION_STATE {
 	} else {
 		[_button_bar2 hide];
 	}
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	[view setNeedsDisplayInRect:_rect];
 	[view setNeedsDisplay:YES];
 }
@@ -344,7 +366,7 @@ ResizeRule rules[8] = {
 
 -(void)setRubberBandFrame:(NSRect)frame
 {
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	NSUndoManager* undoManager = [view undoManager];
 	if ([undoManager isUndoing] || [undoManager isRedoing]) {
 		[[undoManager prepareWithInvocationTarget:self]
@@ -364,7 +386,7 @@ ResizeRule rules[8] = {
 //--------------------
 - (void)reset
 {
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	NSUndoManager* undoManager = [view undoManager];
 	[[undoManager prepareWithInvocationTarget:self]
 	 setRubberBandFrame:_rect];
@@ -473,7 +495,7 @@ ResizeRule rules[8] = {
 
 		case STATE_SELECTION:
 			[self drawDragStrip:d_rect];
-			[self drawSelectedBoxRect:_rect Counter:_animation_counter];
+			[self drawSelectedBoxRect:_rect Counter:self.animationCounter];
 			if (_display_knob) {
 				[self drawKnobs];
 			}	
@@ -488,11 +510,11 @@ ResizeRule rules[8] = {
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	NSPoint pp, cp;
-	CaptureView *view = [_capture_controller view];
-	CaptureWindow *window = [_capture_controller window];
+	CaptureView *view = [self.captureController view];
+	CaptureWindow *window = [self.captureController window];
 
 	cp = [view convertPoint:[theEvent locationInWindow] fromView:nil];
-	int knob_type;
+	int knob_type = KNOB_NON;
 	
 	switch (_state) {
 		case STATE_CLEAR:
@@ -865,14 +887,14 @@ ResizeRule rules[8] = {
 	BOOL is_white_frame = [[UserDefaults valueForKey:UDKEY_SELECTION_WHITE_FRAME] boolValue];
 	BOOL is_exclude_desktop_icons = [[UserDefaults valueForKey:UDKEY_SELECTION_EXCLUDE_ICONS] boolValue];
 	
-	CGWindowImageOption option = kCGWindowListOptionOnScreenBelowWindow;
+	CGWindowListOption option = kCGWindowListOptionOnScreenBelowWindow;
 	if (is_exclude_desktop_icons) {
 		option |= kCGWindowListExcludeDesktopElements;
 	}
 	NSRect s_rect = _rect;
 	s_rect.origin = [CoordinateConverter convertFromLocalToCGWindowPoint:_rect.origin];
 	CGImageRef cgimage = CGWindowListCreateImage(NSRectToCGRect(s_rect), option,
-												 [_capture_controller windowID],
+												 [self.captureController windowID],
 												 kCGWindowImageDefault);
 
 	if (!is_shadow && !is_roundrect && !is_white_frame && !is_exclude_desktop_icons) {
@@ -1046,7 +1068,7 @@ ResizeRule rules[8] = {
 {
 	NSRect frame = _rect;
 	frame.size = size;
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	NSUndoManager* undoManager = [view undoManager];
 	[[undoManager prepareWithInvocationTarget:self]
 	 setRubberBandFrame:_rect];
@@ -1078,46 +1100,46 @@ ResizeRule rules[8] = {
 {
 	switch ([tag intValue]) {
 		case TAG_CANCEL:
-			[_capture_controller cancel];
+			[self.captureController cancel];
 			break;
 			
 		case TAG_TIMER:
-			_animation_counter = 0;
-			[_capture_controller startTimerOnClient:self
+			[self setAnimationCounter:0];
+			[self.captureController startTimerOnClient:self
 											  title:NSLocalizedString(@"TimerTitleSelection", @"")
 											  image:nil];
 			[self changeState:STATE_SELECTION];
 			break;
 
 		case TAG_COPY:
-			[_capture_controller copyImage:[self capture] imageFrame:_rect];
-			[_capture_controller exit];
+			[self.captureController copyImage:[self capture] imageFrame:_rect];
+			[self.captureController exit];
 			break;
 
 		case TAG_COPY_CONTINUOUS:
-			[_capture_controller copyImage:[self capture] imageFrame:_rect];
+			[self.captureController copyImage:[self capture] imageFrame:_rect];
 			break;
 			
 		case TAG_RECORD:
-			[_capture_controller setContinouslyFlag:NO];
-			[_capture_controller saveImage:[self capture] imageFrame:_rect];
+			[self.captureController setContinouslyFlag:NO];
+			[self.captureController saveImage:[self capture] imageFrame:_rect];
 //			[_selection_history setSize:_rect.size];
-			[_capture_controller exit];
+			[self.captureController exit];
 			break;
 
 		case TAG_CONTINUOUS:
-			[_capture_controller setContinouslyFlag:YES];
-			[_capture_controller saveImage:[self capture] imageFrame:_rect];
+			[self.captureController setContinouslyFlag:YES];
+			[self.captureController saveImage:[self capture] imageFrame:_rect];
 //			[_selection_history setSize:_rect.size];
 			break;
 
 		case TAG_CONFIG:
-			[_capture_controller openSelectionConfigMenuWithView:nil event:event];
-			[[_capture_controller view] setNeedsDisplay:YES];
+			[self.captureController openSelectionConfigMenuWithView:nil event:event];
+			[[self.captureController view] setNeedsDisplay:YES];
 			break;
 
 		default:
-			[_capture_controller cancel];
+			[self.captureController cancel];
 			break;
 	}
 }
@@ -1138,8 +1160,8 @@ ResizeRule rules[8] = {
 
 - (void)timerCounted:(TimerController*)controller
 {
-	_animation_counter++;
-	CaptureView* view = [_capture_controller view];
+	[self incrementAnimationCounter];
+	CaptureView* view = [self.captureController view];
 	[view setNeedsDisplayInRect:_rect];
 	[view setNeedsDisplay:YES];
 }
@@ -1148,20 +1170,20 @@ ResizeRule rules[8] = {
 {
 	if ([controller isCopy]) {
 		[self changeState:STATE_RUBBERBAND];
-		[_capture_controller copyImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
-		[_capture_controller exit];
+		[self.captureController copyImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
+		[self.captureController exit];
 
 	} else if ([controller isContinous]) {
-		[_capture_controller setContinouslyFlag:YES];
-		[_capture_controller saveImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
+		[self.captureController setContinouslyFlag:YES];
+		[self.captureController saveImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
 		[controller start];
 
 	} else {
 		// NORMAL
 		[self changeState:STATE_RUBBERBAND];
-		[_capture_controller saveImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
-		[_capture_controller openViewerWithLastfile];
-		[_capture_controller exit];
+		[self.captureController saveImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
+		[self.captureController openViewerWithLastfile];
+		[self.captureController exit];
 	}
 
 }
@@ -1169,7 +1191,7 @@ ResizeRule rules[8] = {
 - (void)timerCanceled:(TimerController*)controller
 {
 	[self changeState:STATE_RUBBERBAND];
-//	[_capture_controller exit];
+//	[self.captureController exit];
 }
 
 - (void)timerPaused:(TimerController*)controller
@@ -1182,7 +1204,7 @@ ResizeRule rules[8] = {
 
 - (void)openConfigMenuWithView:(NSView*)view event:(NSEvent*)event
 {
-	[_capture_controller openSelectionConfigMenuWithView:view event:event];
+	[self.captureController openSelectionConfigMenuWithView:view event:event];
 }
 
 // context menu
@@ -1251,7 +1273,7 @@ ResizeRule rules[8] = {
 	item = [[[NSMenuItem alloc] initWithTitle:title
 									   action:@selector(openPereferecesWindow:)
 								keyEquivalent:@""] autorelease];
-	[item setTarget:[_capture_controller appController]];
+	[item setTarget:[self.captureController appController]];
 	[item setRepresentedObject:[NSNumber numberWithInt:2]];		// 2->Preference Tab:2 (selection option)
 	[menu addItem:item];
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -1406,7 +1428,7 @@ ResizeRule rules[8] = {
 		case 6:
 			// command + z
 			if (command_flag) {
-				CaptureView* view = [_capture_controller view];
+				CaptureView* view = [self.captureController view];
 				NSUndoManager* undoManager = [view undoManager];
 				
 				if (shift_flag) {
@@ -1497,7 +1519,7 @@ ResizeRule rules[8] = {
 			break;
 	}
 	if (is_modified) {
-		CaptureView* view = [_capture_controller view];
+		CaptureView* view = [self.captureController view];
 		NSUndoManager* undoManager = [view undoManager];
 		[[undoManager prepareWithInvocationTarget:self]
 		 setRubberBandFrame:_rect];

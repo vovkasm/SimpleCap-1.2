@@ -14,7 +14,11 @@ enum {
 	STATE_LABEL
 };
 
-@implementation FilenameTextField
+@implementation FilenameTextField {
+    SimpleViewerController* _controller;
+    
+    int _state;
+}
 
 - (void)setStringValue:(NSString *)aString
 {

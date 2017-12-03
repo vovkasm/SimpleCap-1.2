@@ -11,21 +11,6 @@
 #import "Handler.h"
 #import "TimerClient.h"
 
-@class ThinButtonBar;
-@class ToolWindow;
-@class Window;
-
-@interface TrackWindowHandler : HandlerBase <Handler> {
-	
-	ThinButtonBar*	_button_bar;
-	
-	NSTimer*		_timer;
-	
-	BOOL			_is_display_selection;
-	ToolWindow*		_tool_window;
-	int				_state;
-
-	Window*			_window;
-}
+@interface TrackWindowHandler : HandlerBase <Handler> 
 @end
 

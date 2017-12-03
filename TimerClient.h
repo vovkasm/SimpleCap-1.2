@@ -7,6 +7,7 @@
 //
 
 @class TimerController;
+
 @protocol TimerClient
 - (void)timerStarted:(TimerController*)controller;
 - (void)timerCounted:(TimerController*)controller;

@@ -11,8 +11,6 @@
 #import "Handler.h"
 #import "TimerClient.h"
 
-@interface MenuHandler : HandlerBase <Handler, TimerClient>  {
-	BOOL _is_menu_only;
-}
+@interface MenuHandler : HandlerBase <Handler, TimerClient>
 
 @end

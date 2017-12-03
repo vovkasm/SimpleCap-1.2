@@ -15,7 +15,10 @@
 #import "Screen.h"
 #import "ImageFormat.h"
 
-@implementation HandlerBase
+@implementation HandlerBase {
+    CaptureController* _capture_controller;
+    int _animation_counter;
+}
 
 - (id)initWithCaptureController:(CaptureController*)captureController
 {
@@ -24,6 +27,22 @@
 		_capture_controller = captureController;
 	}
 	return self;
+}
+
+- (CaptureController *)captureController {
+    return _capture_controller;
+}
+
+- (int)animationCounter {
+    return _animation_counter;
+}
+
+- (void)setAnimationCounter:(int)animationCounter {
+    _animation_counter = animationCounter;
+}
+
+- (void)incrementAnimationCounter {
+    _animation_counter++;
 }
 
 - (void)drawBackground:(NSRect)rect

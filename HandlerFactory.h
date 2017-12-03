@@ -8,15 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "CaptureType.h"
+#import "Handler.h"
 
-@class Handler;
 @class CaptureController;
 
-@interface HandlerFactory : NSObject {
-	NSMutableDictionary *_handlers;
-	CaptureController *_capture_controller;
-}
+@interface HandlerFactory : NSObject
 
 - (id)initWithCaptureController:(CaptureController*)capture_controller;
-- (Handler*)handlerWithName:(NSString*)name;
+- (id<Handler>)handlerWithName:(NSString*)name;
+
 @end

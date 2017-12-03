@@ -10,13 +10,15 @@
 
 @class CaptureController;
 @class Window;
-@interface HandlerBase : NSObject {
-	
-	CaptureController* _capture_controller;
 
-	int _animation_counter;
-}
+@interface HandlerBase : NSObject
+
+@property (nonatomic, readonly) CaptureController* captureController;
+@property (nonatomic) int animationCounter;
+
 - (id)initWithCaptureController:(CaptureController*)captureController;
+
+- (void)incrementAnimationCounter;
 
 - (void)drawBackground:(NSRect)rect;
 //- (BOOL)isDockWindow:(CFDictionaryRef)window;

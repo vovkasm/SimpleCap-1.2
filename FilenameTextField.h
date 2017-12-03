@@ -9,12 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @class SimpleViewerController;
-@interface FilenameTextField : NSTextField {
+@interface FilenameTextField : NSTextField
 
-	SimpleViewerController* _controller;
-	
-	int _state;
-}
 - (id)initWithController:(SimpleViewerController*)controller;
 - (void)setDisable;
 - (void)startEdit;

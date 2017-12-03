@@ -19,18 +19,9 @@ enum SV_TRANTYPE {
 	SV_TRANTYPE_UPDATE
 };
 
-@class SimpleViewerImageSubView;
 @class SimpleViewerController;
-@interface SimpleViewerImageView : NSView {
-	
-	NSMutableArray* _image_views;
-	int _current_index;
-	CATransition* _transition;
-	SimpleViewerController* _controller;
 
-	BOOL _is_transition;
-
-}
+@interface SimpleViewerImageView : NSView <CAAnimationDelegate>
 
 - (id)initWithFrame:(NSRect)frame withController:(SimpleViewerController*)controller;
 - (void)setImage:(NSImage*)image withDirection:(int)direction;

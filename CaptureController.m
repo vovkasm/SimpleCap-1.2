@@ -25,7 +25,27 @@
 #import "ImageFormat.h"
 
 
-@implementation CaptureController
+@implementation CaptureController {
+    AppController*            _app_controller;
+    FileManager*            _file_manager;
+    CaptureView*            _view;
+    CaptureWindow*            _window;
+    HandlerFactory*            _handler_factory;
+    
+    
+    id<Handler>                _current_handler;
+    id<Handler>                _previous_handler;
+    TimerController*        _timer_controller;
+    
+    Transition*                _transition;
+    
+    NSMenu*                    _context_menu;
+    
+    BOOL                    _result_flag;
+    BOOL                    _cancel_flag;
+    BOOL                    _copy_flag;
+    BOOL                    _continuous_flag;
+}
 
 - (void) dealloc
 {
@@ -363,7 +383,7 @@
 
 - (void)resetSelection
 {
-	Handler* handler = [_handler_factory handlerWithName:CAPTURE_SELECTION];
+	id<Handler> handler = [_handler_factory handlerWithName:CAPTURE_SELECTION];
 	[handler reset];
 }
 - (void)openWindowConfigMenuWithView:(NSView*)view event:(NSEvent*)event

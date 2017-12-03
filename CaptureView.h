@@ -8,15 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AppController;
-@class Handler;
+#import "Handler.h"
 
-@interface CaptureView : NSView {
+@interface CaptureView : NSView
 
-	NSTrackingArea *_tracking_area;
-
-	Handler* _handler;
-}
-- (void)setHandler:(Handler*)handler;
+- (void)setHandler:(id<Handler>)handler;
 
 @end

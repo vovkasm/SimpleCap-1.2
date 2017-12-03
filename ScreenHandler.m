@@ -22,9 +22,9 @@
 
 - (BOOL)startWithObject:(id)object
 {
-	[_capture_controller disableMouseEventInWindow];
-	_animation_counter = 0;
-	[_capture_controller startTimerOnClient:self
+	[self.captureController disableMouseEventInWindow];
+	[self setAnimationCounter:0];
+	[self.captureController startTimerOnClient:self
 									  title:NSLocalizedString(@"TimerTitleScreen", @"")
 									  image:nil];
 	return YES;
@@ -33,7 +33,7 @@
 
 - (void)tearDown
 {
-	[_capture_controller enableMouseEventInWindow];
+	[self.captureController enableMouseEventInWindow];
 }
 
 - (void)drawRect:(NSRect)rect
@@ -43,13 +43,13 @@
 	
 	for (NSScreen* screen in [NSScreen screens]) {
 		NSRect frame = [screen frame];
-		frame.origin = [[_capture_controller view] convertPoint:[[_capture_controller window] convertScreenToBase:frame.origin] fromView:nil];
+		frame.origin = [[self.captureController view] convertPoint:[[self.captureController window] convertScreenToBase:frame.origin] fromView:nil];
 		frame.origin.y -= frame.size.height;
 		frame.size.width -= 0.1;
 		frame.origin.y += 0.1;
 		frame.size.height -= 0.1;
 		
-		[self drawSelectedBoxRect:frame Counter:_animation_counter];
+		[self drawSelectedBoxRect:frame Counter:self.animationCounter];
 	}
 }
 
@@ -81,8 +81,8 @@
 
 - (void)timerCounted:(TimerController*)controller
 {
-	_animation_counter++;
-	CaptureView* view = [_capture_controller view];
+	[self incrementAnimationCounter];
+	CaptureView* view = [self.captureController view];
 	[view setNeedsDisplay:YES];
 }
 
@@ -90,14 +90,14 @@
 {
 	BOOL is_exclude_desktop_icons = [[UserDefaults valueForKey:UDKEY_SCREEN_EXCLUDE_ICONS] boolValue];
 
-	CGWindowImageOption option = kCGWindowListOptionOnScreenBelowWindow;
+	CGWindowListOption option = kCGWindowListOptionOnScreenBelowWindow;
 	if (is_exclude_desktop_icons) {
 		option |= kCGWindowListExcludeDesktopElements;
 	}
 
 	CGImageRef cgimage = CGWindowListCreateImage([[Screen defaultScreen] frameInCGCoordinate],	// NG)CGRectInfinite for 10.6
 												 option,
-												 [_capture_controller windowID],
+												 [self.captureController windowID],
 												 kCGWindowImageDefault);
 //	[_capture_controller saveImage:cgimage];
 	
@@ -146,25 +146,25 @@
 	 09/9/7 9:47:07	[0x0-0xa70a7].com.xcatsan.SimpleCap[1199]	Mon Sep  7 09:47:07 keizointel-2.local SimpleCap[1199] <Error>: CGImageCreate: invalid image bits/pixel or bytes/*/
 	
 	if ([controller isCopy]) {
-		[_capture_controller copyImage:cgimage withMouseCursorInRect:rect imageFrame:NSZeroRect];
-		[_capture_controller exit];
+		[self.captureController copyImage:cgimage withMouseCursorInRect:rect imageFrame:NSZeroRect];
+		[self.captureController exit];
 		
 	} else if ([controller isContinous]) {
-		[_capture_controller setContinouslyFlag:YES];
-		[_capture_controller saveImage:cgimage withMouseCursorInRect:rect imageFrame:NSZeroRect];
+		[self.captureController setContinouslyFlag:YES];
+		[self.captureController saveImage:cgimage withMouseCursorInRect:rect imageFrame:NSZeroRect];
 		[controller start];
 		
 	} else {
 		// NORMAL
-		[_capture_controller saveImage:cgimage withMouseCursorInRect:rect imageFrame:NSZeroRect];
-		[_capture_controller openViewerWithLastfile];
-		[_capture_controller exit];
+		[self.captureController saveImage:cgimage withMouseCursorInRect:rect imageFrame:NSZeroRect];
+		[self.captureController openViewerWithLastfile];
+		[self.captureController exit];
 	}
 }
 
 - (void)timerCanceled:(TimerController*)controller
 {
-	[_capture_controller cancel];
+	[self.captureController cancel];
 }
 
 - (void)timerPaused:(TimerController*)controller
@@ -177,7 +177,7 @@
 
 - (void)openConfigMenuWithView:(NSView*)view event:(NSEvent*)event
 {
-	[_capture_controller openScreenConfigMenuWithView:view event:event];
+	[self.captureController openScreenConfigMenuWithView:view event:event];
 }
 
 

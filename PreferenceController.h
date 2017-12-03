@@ -8,28 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AppController;
-@class HotkeyRegister;
-@class HotkeyTextView;
-@interface PreferenceController : NSObject {
-
-	IBOutlet NSWindow* _window;
-	IBOutlet NSTabView* _tab_view;
-	NSSize _window_size;
-	
-	IBOutlet NSImageView* _image_view;
-	IBOutlet NSImageView* _selection_view;
-	IBOutlet NSImageView* _screen_view;
-
-	IBOutlet AppController* _app_controller;
-	NSToolbar* _toolbar;
-	NSArray* _toolbar_list;
-	
-	HotkeyRegister* _hotkey_register;
-	IBOutlet HotkeyTextView* _hotkey_text;
-	
-	IBOutlet NSButton* _autostart_checkbox;
-}
+@interface PreferenceController : NSObject <NSToolbarDelegate, NSAnimationDelegate>
 
 - (void)chooseImageLocation:(id)sender;
 

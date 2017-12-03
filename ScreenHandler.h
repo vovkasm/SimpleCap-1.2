@@ -11,7 +11,5 @@
 #import "Handler.h"
 #import "TimerClient.h"
 
-@interface ScreenHandler : HandlerBase <Handler, TimerClient> {
-	
-}
+@interface ScreenHandler : HandlerBase <Handler, TimerClient>
 @end

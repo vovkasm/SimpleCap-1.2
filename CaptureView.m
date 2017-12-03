@@ -10,7 +10,11 @@
 #import "AppController.h"
 #import "Handler.h"
 
-@implementation CaptureView
+@implementation CaptureView  {
+    NSTrackingArea *_tracking_area;
+    
+    id<Handler> _handler;
+}
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -53,7 +57,7 @@
 	return YES;
 }
 
-- (void)setHandler:(Handler*)handler
+- (void)setHandler:(id<Handler>)handler
 {
 	_handler = handler;
 }

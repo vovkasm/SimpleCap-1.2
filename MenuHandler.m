@@ -26,7 +26,9 @@ enum MENU_KIND {
 };
 
 
-@implementation MenuHandler
+@implementation MenuHandler {
+    BOOL _is_menu_only;
+}
 
 - (void)reset
 {
@@ -35,17 +37,17 @@ enum MENU_KIND {
 - (BOOL)startWithObject:(id)object
 {
 	_is_menu_only = NO;
-	[_capture_controller startTimerOnClient:self 
+	[self.captureController startTimerOnClient:self
 									  title:NSLocalizedString(@"TimerTitleMenu", @"")
 									  image:nil];
-	[_capture_controller disableMouseEventInWindow];
+	[self.captureController disableMouseEventInWindow];
 	
 	return YES;
 }
 
 - (void)tearDown
 {
-	[_capture_controller enableMouseEventInWindow];
+	[self.captureController enableMouseEventInWindow];
 }
 
 - (void)drawRect:(NSRect)rect
@@ -212,60 +214,60 @@ enum MENU_KIND {
 
 		if ([controller isCopy]) {
 			if (CGRectEqualToRect(cgrect1, CGRectNull)) {
-				[_capture_controller copyImage:cgimage
+				[self.captureController copyImage:cgimage
 				   withMouseCursorInWindowList:menu_windows
 									imageFrame:NSRectFromCGRect(cgrect1)];
 			} else {
-				[_capture_controller copyImage:cgimage
+				[self.captureController copyImage:cgimage
 						 withMouseCursorInRect:NSRectFromCGRect(cgrect2)
 									imageFrame:NSRectFromCGRect(cgrect1)];
 			}
 			
-			[_capture_controller exit];
+			[self.captureController exit];
 			
 		} else if ([controller isContinous]) {
-			[_capture_controller setContinouslyFlag:YES];
+			[self.captureController setContinouslyFlag:YES];
 			if (CGRectEqualToRect(cgrect1, CGRectNull)) {
-				[_capture_controller saveImage:cgimage
+				[self.captureController saveImage:cgimage
 				   withMouseCursorInWindowList:menu_windows
 									imageFrame:NSRectFromCGRect(cgrect1)];
 			} else {
-				[_capture_controller saveImage:cgimage
+				[self.captureController saveImage:cgimage
 						 withMouseCursorInRect:NSRectFromCGRect(cgrect2)
 									imageFrame:NSRectFromCGRect(cgrect1)];
 			}
-			[_capture_controller showResultMessage];
+			[self.captureController showResultMessage];
 			[controller start];
 			
 		} else {
 			// NORMAL
 			if (CGRectEqualToRect(cgrect1, CGRectNull)) {
-				[_capture_controller saveImage:cgimage
+				[self.captureController saveImage:cgimage
 				   withMouseCursorInWindowList:menu_windows
 									imageFrame:NSRectFromCGRect(cgrect1)];
 			} else {
-				[_capture_controller saveImage:cgimage
+				[self.captureController saveImage:cgimage
 						 withMouseCursorInRect:NSRectFromCGRect(cgrect2)
 									imageFrame:NSRectFromCGRect(cgrect1)];
 			}			
-			[_capture_controller openViewerWithLastfile];
-			[_capture_controller exit];
+			[self.captureController openViewerWithLastfile];
+			[self.captureController exit];
 		}
 		
 	} else {
 		if ([controller isContinous]) {
-			[_capture_controller showResultMessage];
+			[self.captureController showResultMessage];
 			[controller start];
 		} else {
 //			[_capture_controller openViewerWithLastfile];
-			[_capture_controller exit];
+			[self.captureController exit];
 		}
 	}
 }
 
 - (void)timerCanceled:(TimerController*)controller
 {
-	[_capture_controller cancel];
+	[self.captureController cancel];
 }
 
 - (void)timerPaused:(TimerController*)controller
@@ -278,7 +280,7 @@ enum MENU_KIND {
 
 - (void)openConfigMenuWithView:(NSView*)view event:(NSEvent*)event
 {
-	[_capture_controller openMenuConfigMenuWithView:view event:event];
+	[self.captureController openMenuConfigMenuWithView:view event:event];
 }
 
 

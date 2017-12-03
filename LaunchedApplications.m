@@ -8,8 +8,9 @@
 
 #import "LaunchedApplications.h"
 
-
-@implementation LaunchedApplications
+@implementation LaunchedApplications {
+    id _delegate;
+}
 
 - (id)initWithDelegate:(id)delegate
 {
@@ -25,7 +26,6 @@
 	[_delegate release];
 	[super dealloc];
 }
-
 
 - (void)clearMenu:(NSMenu*)menu
 {
@@ -57,7 +57,5 @@
 		[menu addItem:item];
 	}
 }
-
-
 
 @end

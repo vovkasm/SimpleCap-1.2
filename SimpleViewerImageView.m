@@ -13,7 +13,14 @@
 
 #define TRANSITION_DURATION	0.25
 
-@implementation SimpleViewerImageView
+@implementation SimpleViewerImageView  {
+    NSMutableArray* _image_views;
+    int _current_index;
+    CATransition* _transition;
+    SimpleViewerController* _controller;
+    
+    BOOL _is_transition;
+}
 
 - (id)initWithFrame:(NSRect)frame withController:(SimpleViewerController*)controller {
     self = [super initWithFrame:frame];

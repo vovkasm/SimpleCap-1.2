@@ -11,11 +11,5 @@
 #import "Handler.h"
 #import "TimerClient.h"
 
-@class ThinButtonBar;
-@interface ApplicationHandler : HandlerBase <Handler, TimerClient> {
-
-	ThinButtonBar*	_button_bar;
-	NSMutableArray* _app_windows;
-	id _application;
-}
+@interface ApplicationHandler : HandlerBase <Handler, TimerClient> 
 @end

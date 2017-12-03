@@ -49,7 +49,35 @@ enum SV_TAG {
 #define IMAGEVIEW_MARGIN_X	1
 #define IMAGEVIEW_MARGIN_Y	1
 
-@implementation SimpleViewerController
+@implementation SimpleViewerController {
+    IBOutlet AppController*        _app_controller;
+    
+    ThinButtonBar*        _button_bar;
+    ThinButtonBar*        _button_bar2;
+    ApplicationButtonPallete* _app_pallete;
+    
+    SimpleViewerPanel*            _panel;
+    SimpleViewerImageView*        _image_view;
+    SimpleViewerInfoView*        _info_view;
+    SimpleViewerBackgroundView*    _background_view;
+    
+    NSString*    _filename;
+    NSDate*        _file_lastmodified;
+    BOOL _is_init_panel_position;
+    
+    ApplicationMenu* _app_menu;
+    
+    FilenameTextField* _filename_textfiled;
+    
+    IBOutlet NSMenu* _capture_menu;
+    IBOutlet NSMenu* _capture_app_menu;
+    
+    IBOutlet NSMenu* _config_menu;
+    IBOutlet NSMenu* _context_menu;
+    IBOutlet NSMenu* _operation_menu;
+    
+    FSEventStreamRef _fsevent_stream;
+}
 
 #pragma mark -
 #pragma mark Handling FSEvent

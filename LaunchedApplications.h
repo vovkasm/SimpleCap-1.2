@@ -9,9 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface LaunchedApplications : NSObject {
-	id	_delegate;
-}
+@interface LaunchedApplications : NSObject
 
 - (instancetype)initWithDelegate:(id)delegate;
 - (void)updateApplicationMenu:(NSMenu*)menu;

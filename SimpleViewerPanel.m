@@ -9,7 +9,9 @@
 #import "SimpleViewerPanel.h"
 #import "SimpleViewerController.h"
 
-@implementation SimpleViewerPanel
+@implementation SimpleViewerPanel {
+    SimpleViewerController* _controller;
+}
 
 - (id)initWithController:(SimpleViewerController*)controller
 {

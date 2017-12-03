@@ -19,10 +19,21 @@ enum TRACKWINDOW_STATE {
 	STATE_SELECTING
 };
 
-@implementation TrackWindowHandler
+@implementation TrackWindowHandler {    
+    ThinButtonBar*    _button_bar;
+    
+    NSTimer*           _timer;
+    
+    BOOL               _is_display_selection;
+    ToolWindow*        _tool_window;
+    int                _state;
+    
+    Window*            _window;
+}
+
 -(void)changeState:(int)state
 {
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	
 	if (_state == state) {
 		return;
@@ -31,21 +42,21 @@ enum TRACKWINDOW_STATE {
 	_state = state;
 	switch (_state) {
 		case STATE_HIDE:
-			[_capture_controller disableMouseEventInWindow];
+			[self.captureController disableMouseEventInWindow];
 			[_button_bar hide];
 			[view setNeedsDisplay:YES];
 			[_tool_window orderOut:self];
 			break;
 			
 		case STATE_TRACKING:
-			[_capture_controller disableMouseEventInWindow];
+			[self.captureController disableMouseEventInWindow];
 			[_button_bar show];
 			[view setNeedsDisplay:YES];
 			[_tool_window makeKeyAndOrderFront:self];
 			break;
 
 		case STATE_SELECTING:
-			[_capture_controller enableMouseEventInWindow];
+			[self.captureController enableMouseEventInWindow];
 			[_button_bar hide];
 			[view setNeedsDisplay:YES];
 			[_tool_window orderOut:self];
@@ -145,15 +156,15 @@ enum TRACKWINDOW_STATE {
 
 - (void)callBack:(NSTimer*)timer
 {
-	_animation_counter++;
+    [self incrementAnimationCounter];
 	if ([self updateWindows]) {
 		[self updateButtonWindow];
-		CaptureView* view = [_capture_controller view];
+		CaptureView* view = [self.captureController view];
 		[view setNeedsDisplay:YES];
 	} else {
 		[_timer invalidate];
 		_timer = nil;
-		[_capture_controller exit];
+		[self.captureController exit];
 	}
 }
 
@@ -186,7 +197,7 @@ enum TRACKWINDOW_STATE {
 	switch (_state) {
 		case STATE_TRACKING:
 			if (_is_display_selection) {
-				[self drawSelectedBoxRect2:[_window rect] Counter:_animation_counter];
+				[self drawSelectedBoxRect2:[_window rect] Counter:self.animationCounter];
 			}
 			break;
 			
@@ -212,7 +223,7 @@ enum TRACKWINDOW_STATE {
 		return;
 	}
 	BOOL hit_flag = NO;
-	NSPoint cp = [[_capture_controller view] convertPoint:[theEvent locationInWindow]  fromView:nil];
+	NSPoint cp = [[self.captureController view] convertPoint:[theEvent locationInWindow]  fromView:nil];
 
 
 	for (Window* window in [self getWindowList]) {
@@ -223,7 +234,7 @@ enum TRACKWINDOW_STATE {
 			hit_flag = YES;
 			if ([window windowID] != [_window windowID]) {
 				[self setWindow:window];
-				[[_capture_controller view] setNeedsDisplay:YES];
+				[[self.captureController view] setNeedsDisplay:YES];
 			}
 			break;
 		}
@@ -272,19 +283,19 @@ enum TRACKWINDOW_STATE {
 	// TODO
 	switch ([tag intValue]) {
 		case TAG_CANCEL:
-			[_capture_controller cancel];
+			[self.captureController cancel];
 			break;
 			
 		case TAG_CONTINUOUS:
-			[_capture_controller saveImage:[self capture] imageFrame:[_window rect]];
+			[self.captureController saveImage:[self capture] imageFrame:[_window rect]];
 			break;
 			
 		case TAG_COPY:
-			[_capture_controller copyImage:[self capture] imageFrame:[_window rect]];
+			[self.captureController copyImage:[self capture] imageFrame:[_window rect]];
 			break;
 		
 		default:
-			[_capture_controller cancel];
+			[self.captureController cancel];
 			break;
 	}
 }

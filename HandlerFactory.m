@@ -8,6 +8,7 @@
 
 #import "HandlerFactory.h"
 
+#import "Handler.h"
 #import "WindowHandler.h"
 #import "TrackWindowHandler.h"
 #import "SelectionHandler.h"
@@ -15,10 +16,12 @@
 #import "MenuHandler.h"
 #import "ApplicationHandler.h"
 #import "WidgetHandler.h"
+#import "CaptureController.h"
 
-#import "Handler.h"
-
-@implementation HandlerFactory
+@implementation HandlerFactory  {
+    NSMutableDictionary<NSString*, id<Handler>> *_handlers;
+    CaptureController *_capture_controller;
+}
 
 - (id)initWithCaptureController:(CaptureController*)capture_controller
 {
@@ -38,9 +41,9 @@
 }
 
 
-- (Handler*)handlerWithName:(NSString*)name
+- (id<Handler>)handlerWithName:(NSString*)name
 {
-	Handler* handler = (Handler*)[_handlers objectForKey:name];
+	id<Handler> handler = [_handlers objectForKey:name];
 	if (!handler) {
 		if ([name isEqualToString:CAPTURE_WINDOW]) {
 			handler = [[WindowHandler alloc] initWithCaptureController:_capture_controller];

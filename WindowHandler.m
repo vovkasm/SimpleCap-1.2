@@ -27,40 +27,52 @@ enum WINDOW_STATE {
 	STATE_TRANSITION
 };
 
-@implementation WindowHandler
+@implementation WindowHandler {
+    ThinButtonBar*    _button_bar;
+    ThinButtonBar*    _button_bar2;
+    int                _state;
+    NSMutableArray*    _selected_window_list;
+    
+    CGWindowID _current_window_id;
+    
+    NSMutableArray* _previous_window_id_list;
+    int _previous_main_work_space;
+    
+    NSPoint _imageformat_display_point;
+}
 
 -(void)changeState:(int)state
 {
 	_state = state;
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	
 	switch (_state) {
 		case STATE_HIDE:
 			[view setNeedsDisplay:YES];
 			[_button_bar hide];
 			[_button_bar2 hide];
-			[_capture_controller enableMouseEventInWindow];
+			[self.captureController enableMouseEventInWindow];
 			break;
 			
 		case STATE_NOSELECTED:
 			[view setNeedsDisplay:YES];
 			[_button_bar hide];
 			[_button_bar2 hide];
-			[_capture_controller disableMouseEventInWindow];
+			[self.captureController disableMouseEventInWindow];
 			break;
 			
 		case STATE_TIMER:
 			[view setNeedsDisplay:YES];
 			[_button_bar hide];
 			[_button_bar2 hide];
-			[_capture_controller disableMouseEventInWindow];
+			[self.captureController disableMouseEventInWindow];
 			break;
 			
 		case STATE_SELECTED:
 			[_button_bar show];
 			[_button_bar2 hide];
 			[view setNeedsDisplay:YES];
-			[_capture_controller enableMouseEventInWindow];
+			[self.captureController enableMouseEventInWindow];
 			break;
 			
 		default:
@@ -126,7 +138,7 @@ enum WINDOW_STATE {
 									  group:@"RECORD"
 						   isActOnMouseDown:NO];
 	
-	CaptureView *view = [_capture_controller view];
+	CaptureView *view = [self.captureController view];
 	[view addSubview:_button_bar];
 	[_button_bar setDelegate:self];
 	
@@ -231,7 +243,7 @@ enum WINDOW_STATE {
 	 [[UserDefaults valueForKey:UDKEY_IMAGE_FORMAT] intValue]];
 
 	if ([_previous_window_id_list count] > 0 &&
-		[_capture_controller isSameHandlerWhenPreviousCapture]) {
+		[self.captureController isSameHandlerWhenPreviousCapture]) {
 		state = STATE_SELECTED;
 		_current_window_id = [self restoreSelectedWindowIDListFromPreviousList];
 		[self adjustButtonBar];
@@ -291,7 +303,7 @@ enum WINDOW_STATE {
 			
 		case STATE_TIMER:
 			for (Window* window in _selected_window_list) {
-				[self drawSelectedBoxRect:[window rect] Counter:_animation_counter];
+				[self drawSelectedBoxRect:[window rect] Counter:self.animationCounter];
 			}
 			break;
 
@@ -302,7 +314,7 @@ enum WINDOW_STATE {
 			break;
 
 		case STATE_TRANSITION:
-			[[_capture_controller transition] draw];
+			[[self.captureController transition] draw];
 			break;
 	}
 }
@@ -332,7 +344,7 @@ enum WINDOW_STATE {
 	[_selected_window_list sortUsingSelector:@selector(compare:)];
 	[self adjustButtonBar];
 	
-	[[_capture_controller view] setNeedsDisplay:YES];
+	[[self.captureController view] setNeedsDisplay:YES];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -341,7 +353,7 @@ enum WINDOW_STATE {
 	
 	// (0) definitions
 //	NSRect pre_rect = _spot_rect;
-	NSPoint cp = [[_capture_controller view] convertPoint:[theEvent locationInWindow]  fromView:nil];
+	NSPoint cp = [[self.captureController view] convertPoint:[theEvent locationInWindow]  fromView:nil];
 	BOOL hit_flag = NO;
 	Window* selected_window;
 
@@ -386,36 +398,36 @@ enum WINDOW_STATE {
 {
 	switch ([tag intValue]) {
 		case TAG_CANCEL:
-			[_capture_controller cancel];
+			[self.captureController cancel];
 			break;
 			
 		case TAG_TIMER:
 			[self changeState:STATE_TIMER];
-			[_capture_controller startTimerOnClient:self
+			[self.captureController startTimerOnClient:self
 											  title:NSLocalizedString(@"TimerTitleWindow", @"")
 											  image:nil];
 			break;
 
 		case TAG_COPY:
-			[_capture_controller copyImage:[self capture]
+			[self.captureController copyImage:[self capture]
 								imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
-			[_capture_controller exit];
+			[self.captureController exit];
 			break;
 
 		case TAG_CONTINUOUS:
-			[_capture_controller setContinouslyFlag:YES];
-			[_capture_controller saveImage:[self capture]
+			[self.captureController setContinouslyFlag:YES];
+			[self.captureController saveImage:[self capture]
 								imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
 			break;
 
 		case TAG_CONFIG:
-			[_capture_controller openWindowConfigMenuWithView:nil event:event];
-			[[_capture_controller view] setNeedsDisplay:YES];
+			[self.captureController openWindowConfigMenuWithView:nil event:event];
+			[[self.captureController view] setNeedsDisplay:YES];
 			break;
 			
 		case TAG_RECORD:
-			[_capture_controller setContinouslyFlag:NO];
-			[_capture_controller saveImage:[self capture]
+			[self.captureController setContinouslyFlag:NO];
+			[self.captureController saveImage:[self capture]
 								 imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
 			/*
 			 CGImageRef cgimage;
@@ -425,11 +437,11 @@ enum WINDOW_STATE {
 			_state = STATE_TRANSITION;
 			[[_capture_controller transition] startWithTarget:self CGImage:cgimage];
 			 */
-			[_capture_controller exit];
+			[self.captureController exit];
 			break;
 			
 		default:
-			[_capture_controller cancel];
+			[self.captureController cancel];
 			break;
 	}
 }
@@ -585,9 +597,9 @@ enum WINDOW_STATE {
 
 - (void)timerCounted:(TimerController*)controller
 {
-	_animation_counter++;
+	[self incrementAnimationCounter];
 	[self updateWindows];
-	CaptureView* view = [_capture_controller view];
+	CaptureView* view = [self.captureController view];
 	[view setNeedsDisplay:YES];
 }
 
@@ -618,20 +630,20 @@ enum WINDOW_STATE {
 	[_selected_window_list sortUsingSelector:@selector(compare:)];
 
 	if ([controller isCopy]) {
-		[_capture_controller copyImage:[self capture] withMouseCursorInWindowList:_selected_window_list imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
+		[self.captureController copyImage:[self capture] withMouseCursorInWindowList:_selected_window_list imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
 
-		[_capture_controller exit];
+		[self.captureController exit];
 		
 	} else if ([controller isContinous]) {
-		[_capture_controller setContinouslyFlag:YES];
-		[_capture_controller saveImage:[self capture] withMouseCursorInWindowList:_selected_window_list imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
+		[self.captureController setContinouslyFlag:YES];
+		[self.captureController saveImage:[self capture] withMouseCursorInWindowList:_selected_window_list imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
 		[controller start];
 		
 	} else {
 		// NORMAL
-		[_capture_controller saveImage:[self capture] withMouseCursorInWindowList:_selected_window_list imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
-		[_capture_controller openViewerWithLastfile];
-		[_capture_controller exit];
+		[self.captureController saveImage:[self capture] withMouseCursorInWindowList:_selected_window_list imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
+		[self.captureController openViewerWithLastfile];
+		[self.captureController exit];
 	}
 	
 	
@@ -665,7 +677,7 @@ enum WINDOW_STATE {
 		[self adjustButtonBar];
 	} else {
 		if (![self startWithObject:nil]) {
-			[_capture_controller cancel];
+			[self.captureController cancel];
 		}
 	}
 	
@@ -681,14 +693,14 @@ enum WINDOW_STATE {
 
 - (void)openConfigMenuWithView:(NSView*)view event:(NSEvent*)event
 {
-	[_capture_controller openWindowConfigMenuWithView:view event:event];
+	[self.captureController openWindowConfigMenuWithView:view event:event];
 }
 
 // callback
 - (void)finishTransition
 {
 	NSLog(@"finished");
-	[_capture_controller exit];
+	[self.captureController exit];
 }
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
