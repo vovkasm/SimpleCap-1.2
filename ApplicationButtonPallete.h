@@ -10,7 +10,7 @@
 
 @interface ApplicationButtonPallete : NSObject
 
-@property (retain) id target;
+@property (strong) id target;
 @property (assign) SEL action;
 
 -(void)addButtonWithPath:(NSString*)path;

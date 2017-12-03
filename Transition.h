@@ -11,11 +11,11 @@
 
 @interface Transition : NSObject
 
-@property (retain) NSNumber* inputTime;
-@property (retain) NSNumber *inputWidth;
-@property (retain) NSNumber *inputScale;
-@property (retain) NSNumber *framePerSec;
-@property (retain) NSNumber *totalSec;
+@property (strong) NSNumber* inputTime;
+@property (strong) NSNumber *inputWidth;
+@property (strong) NSNumber *inputScale;
+@property (strong) NSNumber *framePerSec;
+@property (strong) NSNumber *totalSec;
 
 - (id)initWithView:(NSView*)view;
 - (void)draw;

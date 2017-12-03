@@ -11,8 +11,8 @@
 @property UInt32 modifier;
 @property UInt32 code;
 @property EventHotKeyRef ref;
-@property (retain) NSString* savekey;
-@property (retain) id target;
+@property (strong) NSString* savekey;
+@property (strong) id target;
 
 + (NSNumber*)numberValueWithKeycode:(UInt32)code modifier:(UInt32)modifier;
 - (NSNumber*)numberValue;

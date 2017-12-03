@@ -13,7 +13,7 @@
 
 @interface HandlerBase : NSObject
 
-@property (nonatomic, readonly) CaptureController* captureController;
+@property (weak, nonatomic, readonly) CaptureController* captureController;
 @property (nonatomic) int animationCounter;
 
 - (id)initWithCaptureController:(CaptureController*)captureController;

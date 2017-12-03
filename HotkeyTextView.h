@@ -7,8 +7,8 @@
 @class Hotkey;
 @interface HotkeyTextView : NSTextView
 
-@property (retain) Hotkey* hotkey;
-@property (retain) id target;
+@property (strong) Hotkey* hotkey;
+@property (strong) id target;
 
 - (void)endEdit;
 

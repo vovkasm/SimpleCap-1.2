@@ -11,10 +11,10 @@
 @class ApplicationButtonCell;
 @interface ApplicationButtonMatrix : NSMatrix {
 
-	ApplicationButtonCell* pushedCell;
-	ApplicationButtonCell* overedCell;
-	NSTrackingArea* trackingArea;
+    ApplicationButtonCell* pushedCell;
+    ApplicationButtonCell* overedCell;
+    NSTrackingArea* trackingArea;
 }
-@property (retain) NSTrackingArea* trackingArea;
+@property (strong) NSTrackingArea* trackingArea;
 
 @end

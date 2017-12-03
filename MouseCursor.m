@@ -21,149 +21,143 @@ extern CGError CGSGetGlobalCursorData(CGSConnectionRef, unsigned char*,int*, int
 
 - (NSPoint)convertPoint:(NSPoint)point
 {
-	NSRect rect = [[NSScreen mainScreen] frame];
-	NSPoint p;
-	p.y = rect.size.height - point.y;
-	p.x = point.x;
-	return p;
+    NSRect rect = [[NSScreen mainScreen] frame];
+    NSPoint p;
+    p.y = rect.size.height - point.y;
+    p.x = point.x;
+    return p;
 }
 
 - (void)setupCursor1
 {
-	_location = [self convertPoint:[NSEvent mouseLocation]];
-	NSCursor* cursor = [NSCursor arrowCursor];
-	_image = [[cursor image] retain];
-	_hot_spot = [cursor hotSpot];
+    _location = [self convertPoint:[NSEvent mouseLocation]];
+    NSCursor* cursor = [NSCursor arrowCursor];
+    _image = [cursor image];
+    _hot_spot = [cursor hotSpot];
 }
 
 - (void)setupCursor2
 {
-	// mouse location
-	_location = [self convertPoint:[NSEvent mouseLocation]];
-	
-	// cursor image
-	int cursorDataSize;
-	int cursorRowBytes;
-	CGRect cursorRect;
-	CGPoint hotSpot;
-	int colorDepth;
-	int components;
-	int cursorBitsPerComponent;
-	
-	if (CGSNewConnection(NULL, &connection) != kCGErrorSuccess) {
-		NSLog(@"CGSNewConnection error.\n");
-		return;
-	}
-	if (CGSGetGlobalCursorDataSize(connection, &cursorDataSize) != kCGErrorSuccess) {
-		NSLog(@"CGSGetGlobalCursorDataSize error\n");
-		return;
-	}
-	unsigned char *cursorData = (unsigned char*) malloc(cursorDataSize);
-	
-	CGError err = CGSGetGlobalCursorData(connection,
-										 cursorData,
-										 &cursorDataSize,
-										 &cursorRowBytes,
-										 &cursorRect,
-										 &hotSpot,
-										 &colorDepth,
-										 &components,
-										 &cursorBitsPerComponent);
-	if (err != kCGErrorSuccess) {
-		NSLog(@"CGSGetGlobalCursorData error\n");
-		return;
-	}
+    // mouse location
+    _location = [self convertPoint:[NSEvent mouseLocation]];
+    
+    // cursor image
+    int cursorDataSize;
+    int cursorRowBytes;
+    CGRect cursorRect;
+    CGPoint hotSpot;
+    int colorDepth;
+    int components;
+    int cursorBitsPerComponent;
+    
+    if (CGSNewConnection(NULL, &connection) != kCGErrorSuccess) {
+        NSLog(@"CGSNewConnection error.\n");
+        return;
+    }
+    if (CGSGetGlobalCursorDataSize(connection, &cursorDataSize) != kCGErrorSuccess) {
+        NSLog(@"CGSGetGlobalCursorDataSize error\n");
+        return;
+    }
+    unsigned char *cursorData = (unsigned char*) malloc(cursorDataSize);
+    
+    CGError err = CGSGetGlobalCursorData(connection,
+                                         cursorData,
+                                         &cursorDataSize,
+                                         &cursorRowBytes,
+                                         &cursorRect,
+                                         &hotSpot,
+                                         &colorDepth,
+                                         &components,
+                                         &cursorBitsPerComponent);
+    if (err != kCGErrorSuccess) {
+        NSLog(@"CGSGetGlobalCursorData error\n");
+        return;
+    }
 
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGDataProviderRef providerRef =
-		CGDataProviderCreateWithData(self, cursorData, cursorDataSize, nil);
-	
-	CGImageRef cgImage = CGImageCreate(cursorRect.size.width,
-										  cursorRect.size.height,
-										  cursorBitsPerComponent,
-										  cursorBitsPerComponent * components,
-										  cursorRowBytes,
-										  colorSpace,
-										  kCGImageAlphaPremultipliedLast,
-										  providerRef,
-										  nil,
-										  NO,
-										  kCGRenderingIntentDefault);
-	
-	NSBitmapImageRep* bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
-	_image = [[NSImage alloc] init];
-	[_image addRepresentation:bitmapImageRep];
-	_hot_spot = NSPointFromCGPoint(hotSpot);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGDataProviderRef providerRef =
+        CGDataProviderCreateWithData((__bridge void * _Nullable)(self), cursorData, cursorDataSize, nil);
+    
+    CGImageRef cgImage = CGImageCreate(cursorRect.size.width,
+                                          cursorRect.size.height,
+                                          cursorBitsPerComponent,
+                                          cursorBitsPerComponent * components,
+                                          cursorRowBytes,
+                                          colorSpace,
+                                          kCGImageAlphaPremultipliedLast,
+                                          providerRef,
+                                          nil,
+                                          NO,
+                                          kCGRenderingIntentDefault);
+    
+    NSBitmapImageRep* bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
+    _image = [[NSImage alloc] init];
+    [_image addRepresentation:bitmapImageRep];
+    _hot_spot = NSPointFromCGPoint(hotSpot);
 
-	// 
-	[bitmapImageRep release];
-	CGImageRelease(cgImage);
-	CGDataProviderRelease(providerRef);
-	CGColorSpaceRelease(colorSpace);
-	CGSReleaseConnection(connection);
-	free(cursorData);
+    // 
+    CGImageRelease(cgImage);
+    CGDataProviderRelease(providerRef);
+    CGColorSpaceRelease(colorSpace);
+    CGSReleaseConnection(connection);
+    free(cursorData);
 }
 
 - (id)init
 {
-	self = [super init];
-	if (self) {
-	}
-	return self;
+    self = [super init];
+    if (self) {
+    }
+    return self;
 }
 
-- (void) dealloc
-{
-	[_image release];
-	[super dealloc];
-}
 
 
 + (MouseCursor*)mouseCursor
 {
-	MouseCursor* cursor = [[[MouseCursor alloc] init] autorelease];
-	if ([[UserDefaults valueForKey:UDKEY_CURSOR_METHOD] boolValue]) {
-		[cursor setupCursor2];
-	} else {
-		[cursor setupCursor1];
-	}
-	return cursor;
+    MouseCursor* cursor = [[MouseCursor alloc] init];
+    if ([[UserDefaults valueForKey:UDKEY_CURSOR_METHOD] boolValue]) {
+        [cursor setupCursor2];
+    } else {
+        [cursor setupCursor1];
+    }
+    return cursor;
 }
 
 - (NSImage*)image
 {
-	return _image;
+    return _image;
 }
 - (NSSize)size
 {
-	return [_image size];
+    return [_image size];
 }
 - (NSPoint)location
 {
-	return _location;
+    return _location;
 }
 
 - (NSPoint)hotSpot
 {
-	return _hot_spot;
+    return _hot_spot;
 }
 
 - (NSPoint)pointForDrawing
 {
-	NSPoint p = _location;
-	p.y += [self size].height;
-	p.x -= _hot_spot.x;
-	p.y -= _hot_spot.y;
-	
-	return p;
+    NSPoint p = _location;
+    p.y += [self size].height;
+    p.x -= _hot_spot.x;
+    p.y -= _hot_spot.y;
+    
+    return p;
 }
 
 - (BOOL)isIntersectsRect:(NSRect)rect
 {
-	NSRect mouseCursorRect = NSZeroRect;
-	mouseCursorRect.size = [self size];
-	mouseCursorRect.origin = _location;
-	
-	return NSIntersectsRect(mouseCursorRect, rect);
+    NSRect mouseCursorRect = NSZeroRect;
+    mouseCursorRect.size = [self size];
+    mouseCursorRect.origin = _location;
+    
+    return NSIntersectsRect(mouseCursorRect, rect);
 }
 @end

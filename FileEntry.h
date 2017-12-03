@@ -11,10 +11,10 @@
 
 @interface FileEntry : NSObject
 {
-	NSString* _name;
-	NSDate* _created;
+    NSString* _name;
+    NSDate* _created;
 }
-@property (retain) NSString* name;
-@property (retain) NSDate* created;
+@property (strong) NSString* name;
+@property (strong) NSDate* created;
 - (id)initWithFilename:(NSString*)filename fileAttributes:(NSDictionary*)attrs;
 @end

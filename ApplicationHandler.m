@@ -24,32 +24,26 @@
 
 - (void)setup
 {
-	// setup array
-	_app_windows = [[NSMutableArray alloc] init];
+    // setup array
+    _app_windows = [[NSMutableArray alloc] init];
 }
 
 - (BOOL)startWithObject:(id)object
 {
-	_application = [object retain];
-	[self.captureController disableMouseEventInWindow];
-	[self setAnimationCounter:0];
-	[self.captureController startTimerOnClient:self
-									  title:[_application objectForKey:@"name"]
-									  image:[_application objectForKey:@"image"]];
-	return YES;
+    _application = object;
+    [self.captureController disableMouseEventInWindow];
+    [self setAnimationCounter:0];
+    [self.captureController startTimerOnClient:self
+                                      title:[_application objectForKey:@"name"]
+                                      image:[_application objectForKey:@"image"]];
+    return YES;
 }
 
-- (void) dealloc
-{
-	[_app_windows release];
-	[super dealloc];
-}
 
 - (void)tearDown
 {
-	[_application release];
-	[self.captureController enableMouseEventInWindow];
-	[_app_windows removeAllObjects];
+    [self.captureController enableMouseEventInWindow];
+    [_app_windows removeAllObjects];
 }
 
 - (void)drawRect:(NSRect)rect
@@ -66,29 +60,29 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	[super keyDown:theEvent];
+    [super keyDown:theEvent];
 }
 
 - (NSInteger)windowLevel
 {
-	return [super defaultWindowLevel]+1;
+    return [super defaultWindowLevel]+1;
 }
 
 - (CGImageRef)capture
 {
-	return [self cgimageWithWindowList:_app_windows
-								cgrect:CGRectNull];
+    return [self cgimageWithWindowList:_app_windows
+                                cgrect:CGRectNull];
 }
 
 - (void)setAppWindows
 {
-	int pid = [[_application objectForKey:@"pid"] intValue];
-	for(Window* window in [self getWindowAllList]) {
-		
-		if (pid == [window ownerPID]) {
-			[_app_windows addObject:window];
-		}
-	}
+    int pid = [[_application objectForKey:@"pid"] intValue];
+    for(Window* window in [self getWindowAllList]) {
+        
+        if (pid == [window ownerPID]) {
+            [_app_windows addObject:window];
+        }
+    }
 }
 
 //
@@ -100,47 +94,47 @@
 
 - (void)timerCounted:(TimerController*)controller
 {
-	[self incrementAnimationCounter];
-	CaptureView* view = [self.captureController view];
-	[view setNeedsDisplay:YES];
+    [self incrementAnimationCounter];
+    CaptureView* view = [self.captureController view];
+    [view setNeedsDisplay:YES];
 }
 
 - (void)timerFinished:(TimerController*)controller
 {
-	[self setAppWindows];
-	/*
-	[_capture_controller saveImage:[self capture]
-	   withMouseCursorInWindowList:_app_windows
-						imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
-	[_capture_controller exit];
-	 */
-	if ([controller isCopy]) {
-		[self.captureController copyImage:[self capture]
-		   withMouseCursorInWindowList:_app_windows
-							imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
-		[self.captureController exit];
-		
-	} else if ([controller isContinous]) {
-		[self.captureController setContinouslyFlag:YES];
-		[self.captureController saveImage:[self capture]
-		   withMouseCursorInWindowList:_app_windows
-							imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
-		[controller start];
-		
-	} else {
-		// NORMAL
-		[self.captureController saveImage:[self capture]
-		   withMouseCursorInWindowList:_app_windows
-							imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
-		[self.captureController openViewerWithLastfile];
-		[self.captureController exit];
-	}
-	
+    [self setAppWindows];
+    /*
+    [_capture_controller saveImage:[self capture]
+       withMouseCursorInWindowList:_app_windows
+                        imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
+    [_capture_controller exit];
+     */
+    if ([controller isCopy]) {
+        [self.captureController copyImage:[self capture]
+           withMouseCursorInWindowList:_app_windows
+                            imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
+        [self.captureController exit];
+        
+    } else if ([controller isContinous]) {
+        [self.captureController setContinouslyFlag:YES];
+        [self.captureController saveImage:[self capture]
+           withMouseCursorInWindowList:_app_windows
+                            imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
+        [controller start];
+        
+    } else {
+        // NORMAL
+        [self.captureController saveImage:[self capture]
+           withMouseCursorInWindowList:_app_windows
+                            imageFrame:[Window unionNSRectWithWindowList:_app_windows]];
+        [self.captureController openViewerWithLastfile];
+        [self.captureController exit];
+    }
+    
 }
 
 - (void)timerCanceled:(TimerController*)controller
 {
-	[self.captureController cancel];
+    [self.captureController cancel];
 }
 
 - (void)timerPaused:(TimerController*)controller
@@ -153,18 +147,18 @@
 
 - (void)openConfigMenuWithView:(NSView*)view event:(NSEvent*)event
 {
-	[self.captureController openWindowConfigMenuWithView:view event:event];
+    [self.captureController openWindowConfigMenuWithView:view event:event];
 }
 
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
-	return [super menuForEvent:theEvent];
+    return [super menuForEvent:theEvent];
 }
 
 - (void)setupQuickConfigMenu:(NSMenu*)menu
 {
-	[super setupQuickConfigMenu:menu];
+    [super setupQuickConfigMenu:menu];
 }
 
 - (void)changedImageFormatTo:(int)image_format

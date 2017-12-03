@@ -7,11 +7,11 @@
 
 @class Hotkey;
 @interface HotkeyRegister : NSObject {
-	
-	NSMutableSet* _hotkey_set;
+    
+    NSMutableSet* _hotkey_set;
 }
 
-@property (retain) NSMutableSet* hotkey_set;
+@property (strong) NSMutableSet* hotkey_set;
 
 + (HotkeyRegister*)sharedRegister;
 - (void)unregistAll;

@@ -8,16 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 enum {
-	CELL_STATE_OFF,
-	CELL_STATE_ON,
-	CELL_STATE_OVER
+    CELL_STATE_OFF,
+    CELL_STATE_ON,
+    CELL_STATE_OVER
 };
 
 @interface ApplicationButtonCell : NSCell
 
-@property (retain) NSImage* image;
-@property (retain) NSString* name;
-@property (retain) NSString* path;
+@property (strong) NSImage* image;
+@property (strong) NSString* name;
+@property (strong) NSString* path;
 @property (assign) NSUInteger cellState;
 
 -(id)initWithPath:(NSString*)appPath;
