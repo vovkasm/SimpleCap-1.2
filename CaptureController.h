@@ -13,7 +13,6 @@
 #import "CaptureWindow.h"
 #import "FileManager.h"
 #import "AppController.h"
-#import "Transition.h"
 #import "TimerClient.h"
 #import "CaptureView.h"
 
@@ -51,7 +50,6 @@
 
 - (CaptureView*)view;
 - (CaptureWindow*)window;
-- (Transition*)transition;
 
 - (void)setMenuTitle:(NSString*)title;
 

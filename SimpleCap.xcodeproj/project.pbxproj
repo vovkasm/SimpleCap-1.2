@@ -141,7 +141,6 @@
 		4CE813250E0549EA00D82E7D /* TimerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE813200E0549EA00D82E7D /* TimerWindow.m */; };
 		4CE813260E0549EA00D82E7D /* TimerWindowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE813220E0549EA00D82E7D /* TimerWindowView.m */; };
 		4CE813270E0549EA00D82E7D /* TimerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE813240E0549EA00D82E7D /* TimerController.m */; };
-		4CE971930EA2CF9D0010ECAD /* Transition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE971920EA2CF9D0010ECAD /* Transition.m */; };
 		4CE9719E0EA2D2A80010ECAD /* shading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE9719D0EA2D2A80010ECAD /* shading.png */; };
 		4CE971E60EA2D8140010ECAD /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE971E50EA2D8140010ECAD /* QuartzCore.framework */; };
 		4CF79E80110A5757004775E7 /* icon_copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF79E7E110A5757004775E7 /* icon_copy.png */; };
@@ -370,8 +369,6 @@
 		4CE813220E0549EA00D82E7D /* TimerWindowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerWindowView.m; sourceTree = "<group>"; };
 		4CE813230E0549EA00D82E7D /* TimerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerController.h; sourceTree = "<group>"; };
 		4CE813240E0549EA00D82E7D /* TimerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerController.m; sourceTree = "<group>"; };
-		4CE971910EA2CF9D0010ECAD /* Transition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transition.h; sourceTree = "<group>"; };
-		4CE971920EA2CF9D0010ECAD /* Transition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transition.m; sourceTree = "<group>"; };
 		4CE9719D0EA2D2A80010ECAD /* shading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shading.png; sourceTree = "<group>"; };
 		4CE971E50EA2D8140010ECAD /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		4CF79E7E110A5757004775E7 /* icon_copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_copy.png; sourceTree = "<group>"; };
@@ -553,8 +550,6 @@
 				4CBF86B60E3BF315009B4E71 /* Screen.m */,
 				4CD95FF40E7D4AAB000AA1E2 /* UserDefaults.h */,
 				4CD95FF50E7D4AAB000AA1E2 /* UserDefaults.m */,
-				4CE971910EA2CF9D0010ECAD /* Transition.h */,
-				4CE971920EA2CF9D0010ECAD /* Transition.m */,
 				4C01FD210EB34DFD009ABC5A /* SelectionHistory.h */,
 				4C01FD220EB34DFD009ABC5A /* SelectionHistory.m */,
 				4C1EC07B0E1ED14000CA1F17 /* Window.h */,
@@ -935,7 +930,6 @@
 				4CBF86B70E3BF315009B4E71 /* Screen.m in Sources */,
 				4C73F6370E7AB7B100764E3E /* PreferenceController.m in Sources */,
 				4CD95FF60E7D4AAB000AA1E2 /* UserDefaults.m in Sources */,
-				4CE971930EA2CF9D0010ECAD /* Transition.m in Sources */,
 				4C01FD230EB34DFD009ABC5A /* SelectionHistory.m in Sources */,
 				4CAB51040EB9D99B002360EB /* ApplicationMenu.m in Sources */,
 				4C2561120EEEA53D00A3D325 /* FukidashiView.m in Sources */,

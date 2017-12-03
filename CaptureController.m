@@ -19,7 +19,6 @@
 #import "WindowShadow.h"
 #import "Screen.h"
 #import "UserDefaults.h"
-#import "Transition.h"
 #import "DesktopWindow.h"
 #import "CaptureType.h"
 #import "ImageFormat.h"
@@ -37,8 +36,6 @@
     id<Handler>                _previous_handler;
     TimerController*        _timer_controller;
     
-    Transition*                _transition;
-    
     NSMenu*                    _context_menu;
     
     BOOL                    _result_flag;
@@ -47,19 +44,14 @@
     BOOL                    _continuous_flag;
 }
 
-- (void) dealloc
-{
+- (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    
-    
 }
 
 //
 // for app controller
 //
-- (id)initWithAppController:(AppController*)appController
-{
+- (id)initWithAppController:(AppController*)appController {
     self = [super init];
     if (self) {
         _app_controller = appController;
@@ -75,8 +67,6 @@
         // below call -> hung up!
         // [_window setNextResponder:_view];
         
-        _transition = [[Transition alloc] initWithView:_view];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(screenChanged:)
                                                      name:NSApplicationDidChangeScreenParametersNotification
@@ -87,13 +77,11 @@
     return self;
 }
 
-- (void)setFileManager:(FileManager*)fileManager
-{
+- (void)setFileManager:(FileManager*)fileManager {
     _file_manager = fileManager;
 }
 
-- (void)startCaptureWithHandlerName:(NSString*)handlerName withObject:(id)object
-{
+- (void)startCaptureWithHandlerName:(NSString*)handlerName withObject:(id)object {
     _current_handler = [_handler_factory handlerWithName:handlerName];
 
     [_view setHandler:_current_handler];
@@ -120,24 +108,21 @@
     }
 }
 
-- (void)playSound
-{
+- (void)playSound {
     if ([[UserDefaults valueForKey:UDKEY_PLAY_SOUND] boolValue]) {
         NSSound *sound = [NSSound soundNamed:@"Submarine"];
         [sound play];
     }
 }
 
-- (void)openViewerWithLastfile
-{
+- (void)openViewerWithLastfile {
     [_app_controller openViewerWithLastfile];
 }
 
 //
 // for handlers
 //
-- (void)showResultMessage
-{
+- (void)showResultMessage {
     if (_result_flag && _copy_flag) {
         [_app_controller showMessage:NSLocalizedString(@"CopiedObjects", @"")];
     } else if (!_result_flag && !_cancel_flag) {
@@ -145,8 +130,7 @@
     }
 }
 
-- (void)exit
-{
+- (void)exit {
     [self showResultMessage];
     
     [_timer_controller hideWindow];
@@ -156,19 +140,17 @@
     
     [_app_controller exitCaptureWithCancel:_cancel_flag contiuous:_continuous_flag];
 }
-- (void)cancel
-{
+
+- (void)cancel {
     _cancel_flag = YES;
     [self exit];
 }
 
-- (AppController*)appController
-{
+- (AppController*)appController {
     return _app_controller;
 }
 
-- (void)_saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offset:(NSSize)offset imageFrame:(NSRect)image_frame
-{
+- (void)_saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offset:(NSSize)offset imageFrame:(NSRect)image_frame {
     if (cgimage) {
         // composite with mouse cursor
         MouseCursor* cursor = [MouseCursor mouseCursor];
@@ -245,29 +227,25 @@
 
     }
 }
-- (void)saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offest:(NSSize)offset imageFrame:(NSRect)frame
-{
+
+- (void)saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offest:(NSSize)offset imageFrame:(NSRect)frame {
     [self _saveImage:cgimage withMouseCursorInRect:NSZeroRect offset:offset imageFrame:frame];
 }
 
-- (void)saveImage:(CGImageRef)cgimage imageFrame:(NSRect)image_frame
-{
+- (void)saveImage:(CGImageRef)cgimage imageFrame:(NSRect)image_frame {
     [self _saveImage:cgimage withMouseCursorInRect:NSZeroRect offset:NSZeroSize imageFrame:image_frame];
 }
 
-- (void)saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect imageFrame:(NSRect)image_frame
-{
+- (void)saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect imageFrame:(NSRect)image_frame {
     [self _saveImage:cgimage withMouseCursorInRect:rect offset:NSZeroSize imageFrame:image_frame];
 }
 
-- (void)saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offset:(NSSize)offset imageFrame:(NSRect)image_frame
-{
+- (void)saveImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offset:(NSSize)offset imageFrame:(NSRect)image_frame {
     [self _saveImage:cgimage withMouseCursorInRect:rect offset:offset imageFrame:image_frame];
 }
 
 
-- (void)saveImage:(CGImageRef)cgimage withMouseCursorInWindowList:(NSArray*)list imageFrame:(NSRect)frame
-{
+- (void)saveImage:(CGImageRef)cgimage withMouseCursorInWindowList:(NSArray*)list imageFrame:(NSRect)frame {
     NSRect all_rect = [Window unionNSRectWithWindowList:list];
     NSSize offset = [WindowShadow offset];
 
@@ -279,8 +257,7 @@
 }
 
 // copy
-- (void)copyImageWithBitmapImageRep:(NSBitmapImageRep*)bitmap_rep
-{
+- (void)copyImageWithBitmapImageRep:(NSBitmapImageRep*)bitmap_rep {
     NSData* data = [bitmap_rep representationUsingType:NSTIFFFileType
                                             properties:[NSDictionary dictionary]];
     NSPasteboard *pb = [NSPasteboard generalPasteboard];
@@ -292,68 +269,54 @@
     
 }
 
-- (void)copyImage:(CGImageRef)cgimage imageFrame:(NSRect)image_frame
-{
+- (void)copyImage:(CGImageRef)cgimage imageFrame:(NSRect)image_frame {
     _copy_flag = YES;
     [self _saveImage:cgimage withMouseCursorInRect:NSZeroRect offset:NSZeroSize imageFrame:image_frame];
 }
 
-- (void)copyImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect imageFrame:(NSRect)image_frame
-{
+- (void)copyImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect imageFrame:(NSRect)image_frame {
     _copy_flag = YES;
     [self _saveImage:cgimage withMouseCursorInRect:rect offset:NSZeroSize imageFrame:image_frame];
 }
 
-- (void)copyImage:(CGImageRef)cgimage withMouseCursorInWindowList:(NSArray*)list imageFrame:(NSRect)frame
-{
+- (void)copyImage:(CGImageRef)cgimage withMouseCursorInWindowList:(NSArray*)list imageFrame:(NSRect)frame {
     _copy_flag = YES;
     [self saveImage:cgimage withMouseCursorInWindowList:list imageFrame:frame];
 }
 
-- (void)copyImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offset:(NSSize)offset imageFrame:(NSRect)frame
-{
+- (void)copyImage:(CGImageRef)cgimage withMouseCursorInRect:(NSRect)rect offset:(NSSize)offset imageFrame:(NSRect)frame {
     _copy_flag = YES;
     [self _saveImage:cgimage withMouseCursorInRect:NSZeroRect offset:offset imageFrame:frame];
 }
 
-- (void)disableMouseEventInWindow
-{
+- (void)disableMouseEventInWindow {
 //    [_window setIgnoresMouseEvents:YES];
 }
 
-- (void)enableMouseEventInWindow
-{
+- (void)enableMouseEventInWindow {
 //    [_window setIgnoresMouseEvents:NO];
 }
 
 
-- (CGWindowID)windowID
-{
+- (CGWindowID)windowID {
     return (CGWindowID)[_window windowNumber];
 }
 
-- (CaptureView*)view
-{
+- (CaptureView*)view {
     return _view;
 }
-- (CaptureWindow*)window
-{
+
+- (CaptureWindow*)window {
     return _window;
 }
-- (Transition*)transition
-{
-    return _transition;
-}
-- (void)setMenuTitle:(NSString*)title
-{
+- (void)setMenuTitle:(NSString*)title {
     [_app_controller setMenuTitle:title];
 }
 
 //
 // Timer Dialog
 //
-- (void)startTimerOnClient:(id<TimerClient>)client title:(NSString*)title image:(NSImage*)image
-{
+- (void)startTimerOnClient:(id<TimerClient>)client title:(NSString*)title image:(NSImage*)image {
     [self setContinouslyFlag:NO];
     [_timer_controller setTimerClient:client];
     [_timer_controller setTitle:title];
@@ -365,8 +328,7 @@
 //
 // for notification
 //
-- (void)screenChanged:(NSNotification *)notification
-{
+- (void)screenChanged:(NSNotification *)notification {
     NSRect frame = [[Screen defaultScreen] frame];
     [_window setFrame:frame display:NO];
 
@@ -374,13 +336,12 @@
     [_view setFrame:frame];
 }
 
-- (void)resetSelection
-{
+- (void)resetSelection {
     id<Handler> handler = [_handler_factory handlerWithName:CAPTURE_SELECTION];
     [handler reset];
 }
-- (void)openWindowConfigMenuWithView:(NSView*)view event:(NSEvent*)event
-{
+
+- (void)openWindowConfigMenuWithView:(NSView*)view event:(NSEvent*)event {
     if (!view) {
         view = _view;
     }
@@ -389,8 +350,7 @@
     [NSMenu popUpContextMenu:qc_menu withEvent:event forView:view];
 }
 
-- (void)openSelectionConfigMenuWithView:(NSView*)view event:(NSEvent*)event
-{
+- (void)openSelectionConfigMenuWithView:(NSView*)view event:(NSEvent*)event {
     if (!view) {
         view = _view;
     }
@@ -398,8 +358,8 @@
     [_current_handler setupQuickConfigMenu:qc_menu];
     [NSMenu popUpContextMenu:qc_menu withEvent:event forView:view];
 }
-- (void)openScreenConfigMenuWithView:(NSView*)view event:(NSEvent*)event
-{
+
+- (void)openScreenConfigMenuWithView:(NSView*)view event:(NSEvent*)event {
     if (!view) {
         view = _view;
     }
@@ -407,8 +367,8 @@
     [_current_handler setupQuickConfigMenu:qc_menu];
     [NSMenu popUpContextMenu:qc_menu withEvent:event forView:view];
 }
-- (void)openMenuConfigMenuWithView:(NSView*)view event:(NSEvent*)event
-{
+
+- (void)openMenuConfigMenuWithView:(NSView*)view event:(NSEvent*)event {
     if (!view) {
         view = _view;
     }
@@ -417,13 +377,11 @@
     [NSMenu popUpContextMenu:qc_menu withEvent:event forView:view];
 }
 
-- (BOOL)isSameHandlerWhenPreviousCapture
-{
+- (BOOL)isSameHandlerWhenPreviousCapture {
     return (_current_handler == _previous_handler);
 }
 
-- (void)setContinouslyFlag:(BOOL)flag
-{
+- (void)setContinouslyFlag:(BOOL)flag {
     if (_continuous_flag != flag) {
         _continuous_flag = flag;
         [_file_manager setSerialFlag:flag];
@@ -432,8 +390,8 @@
 
 #pragma mark -
 #pragma mark AppController Delegate
-- (void)changedImageFormatTo:(int)image_format
-{
+
+- (void)changedImageFormatTo:(int)image_format {
     [_current_handler changedImageFormatTo:image_format];
     [_timer_controller changedImageFormatTo:image_format];
 }

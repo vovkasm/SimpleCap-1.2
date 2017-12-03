@@ -11,8 +11,7 @@
 #import "TimerController.h"
 #import "ThinButtonBar.h"
 #import "ButtonTags.h"
-#import    "Window.h"
-#import "Transition.h"
+#import "Window.h"
 // for [NSMenu popUpContextMenu:_capture_menu withEvent:event forView:nil];
 // need it ?
 #import "AppController.h"
@@ -23,8 +22,7 @@ enum WINDOW_STATE {
     STATE_HIDE,
     STATE_NOSELECTED,
     STATE_SELECTED,
-    STATE_TIMER,
-    STATE_TRANSITION
+    STATE_TIMER
 };
 
 @implementation WindowHandler {
@@ -306,10 +304,6 @@ enum WINDOW_STATE {
             
         case STATE_HIDE:
             break;
-
-        case STATE_TRANSITION:
-            [[self.captureController transition] draw];
-            break;
     }
 }
 
@@ -408,8 +402,7 @@ enum WINDOW_STATE {
 
         case TAG_CONTINUOUS:
             [self.captureController setContinouslyFlag:YES];
-            [self.captureController saveImage:[self capture]
-                                imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
+            [self.captureController saveImage:[self capture] imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
             break;
 
         case TAG_CONFIG:
@@ -419,16 +412,7 @@ enum WINDOW_STATE {
             
         case TAG_RECORD:
             [self.captureController setContinouslyFlag:NO];
-            [self.captureController saveImage:[self capture]
-                                 imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
-            /*
-             CGImageRef cgimage;
-            cgimage = [self cgimageWithWindowList:_selected_window_list
-                                           cgrect:CGRectNull
-                                    ignoreOptions:YES];
-            _state = STATE_TRANSITION;
-            [[_capture_controller transition] startWithTarget:self CGImage:cgimage];
-             */
+            [self.captureController saveImage:[self capture] imageFrame:[Window unionNSRectWithWindowList:_selected_window_list]];
             [self.captureController exit];
             break;
             
