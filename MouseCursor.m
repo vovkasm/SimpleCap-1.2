@@ -84,7 +84,7 @@ extern CGError CGSGetGlobalCursorData(CGSConnectionRef, unsigned char*,int*, int
                                           cursorBitsPerComponent * components,
                                           cursorRowBytes,
                                           colorSpace,
-                                          kCGImageAlphaPremultipliedLast,
+                                          (CGBitmapInfo)kCGImageAlphaPremultipliedLast,
                                           providerRef,
                                           nil,
                                           NO,

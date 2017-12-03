@@ -427,7 +427,7 @@
     [openPanel setCanCreateDirectories:YES];
     [openPanel setAllowsMultipleSelection:NO];
 
-    int result = [openPanel runModalForDirectory:path
+    NSInteger result = [openPanel runModalForDirectory:path
                                      file:nil
                                     types:nil];
 

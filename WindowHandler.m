@@ -432,11 +432,11 @@ enum WINDOW_STATE {
         }
     }
 
-    if ([target_list count] == 0) {
+    if (target_list.count == 0) {
         return;
     }
 
-    int index = 0;
+    NSUInteger index = 0;
     for (Window* window in target_list) {
         if ([window windowID] == _current_window_id) {
             break;
@@ -447,11 +447,12 @@ enum WINDOW_STATE {
         return;
     }
     
-    index += increment;
-    if (index < 0) {
-        index = [target_list count] - 1;
-    } else if (index >= [target_list count]) {
+    if (index < increment) {
+        index = target_list.count - 1;
+    } else if (index + increment >= target_list.count) {
         index = 0;
+    } else {
+        index += increment;
     }
     
     Window* selected_window = [target_list objectAtIndex:index];

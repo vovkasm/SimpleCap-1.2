@@ -13,6 +13,9 @@
 
 @interface FileManager : NSObject
 
+@property (nonatomic, readonly) NSUInteger count;
+@property (nonatomic, readonly) NSUInteger index;
+
 - (NSString*)path;
 - (NSString*)nextFilename;
 - (NSString*)saveImage:(NSBitmapImageRep*)bitmap_rep;
@@ -27,7 +30,6 @@
 - (void)moveToTrash:(NSString*)filename;
 - (BOOL)renameFrom:(NSString*)old_path To:(NSString*)new_path;
 - (BOOL)isExistPath:(NSString*)path;
-- (int)index;
-- (int)count;
 - (FileEntry*)currentFile;
+
 @end

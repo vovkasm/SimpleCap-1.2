@@ -9,10 +9,11 @@
 #import "FileList.h"
 #import "FileEntry.h"
 
-@implementation FileList
+@implementation FileList {
+    NSMutableArray* _list;
+}
 
-- (id)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _list = [[NSMutableArray alloc] init];
@@ -21,8 +22,7 @@
 }
 
 
-- (BOOL)isTargetFilename:(NSString*)filename
-{
+- (BOOL)isTargetFilename:(NSString*)filename {
     NSString* ext = [[filename pathExtension] lowercaseString];
     if ([ext isEqualToString:@"png"]) {
         return YES;
@@ -36,8 +36,7 @@
     return NO;
 }
 
--(void)setPath:(NSString*)path
-{
+-(void)setPath:(NSString*)path {
     NSError* error;
     [_list removeAllObjects];    // **clear**
 
@@ -51,34 +50,15 @@
         }
     }
 
-    /*
-    NSDirectoryEnumerator* dir_enum = [fm enumeratorAtPath:path];
-    FileEntry* entry;
-
-    NSString* filename;
-    NSDictionary* attrs;
-    while (filename = [dir_enum nextObject]) {
-        if ([self isTargetFilename:filename]) {
-            attrs = [dir_enum fileAttributes];
-            if ([[attrs objectForKey:NSFileType] isEqualToString:NSFileTypeRegular]) {
-                entry = [[[FileEntry alloc] initWithFilename:filename
-                                          fileAttributes:attrs] autorelease];
-                [_list addObject:entry];
-            }
-        }
-    }
-    */
     [_list sortUsingSelector:@selector(compare:)];
 }
 
-- (int)count
-{
+- (NSUInteger)count {
     return [_list count];
 }
 
-- (int)indexWithFilename:(NSString*)filename
-{
-    int index = 0;
+- (NSUInteger)indexWithFilename:(NSString*)filename {
+    NSUInteger index = 0;
     for (FileEntry* entry in _list) {
         if ([entry.name isEqualToString:filename]) {
             break;
@@ -88,14 +68,12 @@
     return index;
 }
 
-- (FileEntry*)fileEntryAtIndex:(int)index
-{
+- (FileEntry*)fileEntryAtIndex:(NSUInteger)index {
     return [_list objectAtIndex:index];
 }
 
-- (void)removeAtIndex:(int)index
-{
-    if (index >= 0 && index < [_list count]) {
+- (void)removeAtIndex:(NSUInteger)index {
+    if (index < _list.count) {
         [_list removeObjectAtIndex:index];
     }
 }

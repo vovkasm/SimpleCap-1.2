@@ -15,8 +15,6 @@
 #define FILENAME_NUMBER_MAX        9999
 
 @implementation FileManager {
-    int _index;
-    
     FileList* _file_list;
     FileEntry* _current_file;
     
@@ -24,8 +22,7 @@
     BOOL _serial_flag;
 }
 
-- (id)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _file_list = [[FileList alloc] init];
@@ -34,14 +31,12 @@
 }
 
 
-- (NSString*)path
-{
+- (NSString*)path {
     NSString *path = [UserDefaults valueForKey:UDKEY_IMAGE_LOCATION];
     return path;
 }
 
-- (NSString*)extension
-{
+- (NSString*)extension {
     int image_format = [[UserDefaults valueForKey:UDKEY_IMAGE_FORMAT] intValue];
     NSString* extension;
 
@@ -65,8 +60,7 @@
     return extension;
 }
 
-- (int)formatTypeFromFilename:(NSString*)filename
-{
+- (int)formatTypeFromFilename:(NSString*)filename {
     NSString* ext = [filename pathExtension];
     
     if ([ext isEqualToString:@"gif"]) {
@@ -78,21 +72,19 @@
     }
 }
 
--(NSString*)serialFilename
-{
+-(NSString*)serialFilename {
     return _serial_filename;
 }
--(void)setSerialFilename:(NSString*)filename
-{
+
+-(void)setSerialFilename:(NSString*)filename {
     _serial_filename = filename;
 }
 
 // filename format
 // YYMMDD-nnnn.png
 //
-- (NSString*)nextFilename
-{
-    int count;
+- (NSString*)nextFilename {
+    NSInteger count;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSFileManager *fm = [NSFileManager defaultManager];
 
@@ -114,7 +106,7 @@
     NSString* filename;
     if ((_serial_flag && !_serial_filename) || !_serial_flag) {
         for (; count <= FILENAME_NUMBER_MAX; count++) { 
-            filename = [NSString stringWithFormat:@"%@/%@-%04d.%@", path, date, count, extension];
+            filename = [NSString stringWithFormat:@"%@/%@-%04ld.%@", path, date, (long)count, extension];
             if (![fm fileExistsAtPath:filename]) {
                 break;
             }
@@ -142,8 +134,7 @@
 // YYMMDD-nnnn.png
 //
 
-- (NSBitmapImageRep*)fillBackground:(NSBitmapImageRep*)bitmap_rep
-{
+- (NSBitmapImageRep*)fillBackground:(NSBitmapImageRep*)bitmap_rep {
     NSImage *src_image = [[NSImage alloc] init];
     [src_image addRepresentation:bitmap_rep];
     NSSize image_size = [src_image size];
@@ -158,8 +149,7 @@
     return output;
 }
 
-- (void)makeFolder
-{
+- (void)makeFolder {
     NSString* path = [self path];
     NSError* error;
     NSFileManager* fm = [NSFileManager defaultManager];
@@ -172,8 +162,7 @@
     }
 }
 
-- (NSString*)saveImage:(NSBitmapImageRep*)bitmap_rep withFilename:(NSString*)filename
-{
+- (NSString*)saveImage:(NSBitmapImageRep*)bitmap_rep withFilename:(NSString*)filename {
     int image_format;
 
     if (filename) {
@@ -215,9 +204,7 @@
     return filename;
 }
 
-- (NSString*)saveImage:(NSBitmapImageRep*)bitmap_rep
-
-{
+- (NSString*)saveImage:(NSBitmapImageRep*)bitmap_rep {
     return [self saveImage:bitmap_rep withFilename:nil];
 }
 
@@ -225,23 +212,25 @@
 //  0: last file (allow filename nil)
 //  1: previous
 //  2: next
-- (NSString*)filenameInSaveFolderWithCurrentFilename:(NSString*)filename mode:(int)mode
-{
+- (NSString*)filenameInSaveFolderWithCurrentFilename:(NSString*)filename mode:(int)mode {
     [_file_list setPath:[self path]];
 
     filename = [filename lastPathComponent];
 
-    int count = [_file_list count];
+    NSUInteger count = [_file_list count];
+    if (count == 0) {
+        _current_file = nil;
+        return nil;
+    }
+    
     _index = [_file_list indexWithFilename:filename];
 
-    NSString* new_filename;
-    
     if (mode == 0) {
         _index = count - 1;
-
     } else if (mode == 1) {
-        _index--;
-        if (_index < 0) {
+        if (_index > 0) {
+            _index--;
+        } else {
             _index = count - 1;
         }
     } else if (mode == 2) {
@@ -251,47 +240,32 @@
         }
     }
 
-    if (count > 0) {
-        _current_file = [_file_list fileEntryAtIndex:_index];
-        new_filename = [[self path] stringByAppendingPathComponent:_current_file.name];
-    } else {
-        _current_file = nil;
-        new_filename = nil;
-    }
-    return new_filename;
+    _current_file = [_file_list fileEntryAtIndex:_index];
+    return [[self path] stringByAppendingPathComponent:_current_file.name];
 }
-- (NSString*)previousFilenameInSaveFolderWithCurrentFilename:(NSString*)filename
-{
+
+- (NSString*)previousFilenameInSaveFolderWithCurrentFilename:(NSString*)filename {
     return [self filenameInSaveFolderWithCurrentFilename:filename mode:1];
 }
 
-- (NSString*)nextFilenameInSaveFolderWithCurrentFilename:(NSString*)filename
-{
+- (NSString*)nextFilenameInSaveFolderWithCurrentFilename:(NSString*)filename {
     return [self filenameInSaveFolderWithCurrentFilename:filename mode:2];
 }
-- (NSString*)filenameAfterDeleteFilename:(NSString*)filename
-{
+
+- (NSString*)filenameAfterDeleteFilename:(NSString*)filename {
     NSString* ret = [self filenameInSaveFolderWithCurrentFilename:filename mode:1];
     return ret;
 }
 
-- (NSString*)lastFilename
-{
+- (NSString*)lastFilename {
     return [self filenameInSaveFolderWithCurrentFilename:nil mode:0];
 }
 
-- (int)index
-{
-    return _index;
-}
-
-- (int)count
-{
+- (NSUInteger)count {
     return [_file_list count];
 }
 
-- (void)moveToTrash:(NSString*)filename
-{
+- (void)moveToTrash:(NSString*)filename {
     if (!filename) {
         return;
     }
@@ -304,31 +278,25 @@
                                                   files:files
                                                     tag:nil];
     [_file_list removeAtIndex:_index];
-    _index--;
-    if (_index < 0) {
-        _index = 0;
-    }
+    if (_index > 0) _index--;
 }
-- (BOOL)renameFrom:(NSString*)old_path To:(NSString*)new_path;
-{
-    BOOL result = [[NSFileManager defaultManager]
-                   movePath:old_path toPath:new_path handler:nil];
+
+- (BOOL)renameFrom:(NSString*)old_path To:(NSString*)new_path {
+    BOOL result = [[NSFileManager defaultManager] movePath:old_path toPath:new_path handler:nil];
     return result;
 }
-- (BOOL)isExistPath:(NSString*)path
-{
+
+- (BOOL)isExistPath:(NSString*)path {
     BOOL result = [[NSFileManager defaultManager]
                     fileExistsAtPath:path];
     return result;
 }
 
-- (FileEntry*)currentFile
-{
+- (FileEntry*)currentFile {
     return _current_file;
 }
 
-- (void)setSerialFlag:(BOOL)flag
-{
+- (void)setSerialFlag:(BOOL)flag {
     [self setSerialFilename:nil];
     _serial_flag = flag;
 }

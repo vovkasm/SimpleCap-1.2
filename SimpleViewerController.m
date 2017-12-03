@@ -334,14 +334,14 @@ void fsevents_callback(
 // private methods
 //
 - (void)updateInfomation {
-    int index = [[_app_controller fileManager] index];
-    int count = [[_app_controller fileManager] count];
+    NSUInteger index = [[_app_controller fileManager] index];
+    NSUInteger count = [[_app_controller fileManager] count];
     if (count == 0) {
         index = 0;
     } else {
         index++;
     }
-    NSString* dir_info = [NSString stringWithFormat:@"%d / %d", index, count];
+    NSString* dir_info = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)index, (unsigned long)count];
     [_info_view setDirectoryInfomation:dir_info];
     
 }

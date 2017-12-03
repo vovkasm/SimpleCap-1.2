@@ -8,14 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class FileEntry;
-@interface FileList : NSObject {
-	NSMutableArray* _list;
-}
+#import "FileEntry.h"
 
--(void)setPath:(NSString*)path;
-- (int)count;
-- (int)indexWithFilename:(NSString*)filename;
-- (FileEntry*)fileEntryAtIndex:(int)index;
-- (void)removeAtIndex:(int)index;
+@interface FileList : NSObject
+
+@property (nonatomic, readonly) NSUInteger count;
+
+- (void)setPath:(NSString*)path;
+- (NSUInteger)indexWithFilename:(NSString*)filename;
+- (FileEntry*)fileEntryAtIndex:(NSUInteger)index;
+- (void)removeAtIndex:(NSUInteger)index;
 @end
