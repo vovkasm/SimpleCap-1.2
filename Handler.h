@@ -19,9 +19,10 @@
 - (void)mouseMoved:(NSEvent *)theEvent;
 - (void)mouseDown:(NSEvent *)theEvent;
 - (void)keyDown:(NSEvent *)theEvent;
-- (NSMenu *)menuForEvent:(NSEvent *)theEvent;
+- (NSMenu *)menuForEvent:(NSEvent*)theEvent;
 - (void)setupQuickConfigMenu:(NSMenu*)menu;
 - (void)changedImageFormatTo:(int)image_format;
+- (void)flagsChanged:(NSEvent*)theEvent;
 
 // property
 - (NSInteger)windowLevel;

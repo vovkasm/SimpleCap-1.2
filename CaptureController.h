@@ -8,18 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class FileManager;
-@class AppController;
-@class CaptureView;
-@class CaptureWindow;
-@class Handler;
-@class TimerController;
-@class WindowShadow;
-@class Screen;
-@class Transition;
-@class HandlerFactory;
-
-@protocol TimerClient;
+#import "Handler.h"
+#import "HandlerFactory.h"
+#import "CaptureWindow.h"
+#import "FileManager.h"
+#import "AppController.h"
+#import "Transition.h"
+#import "TimerClient.h"
 
 @interface CaptureController : NSObject
 
