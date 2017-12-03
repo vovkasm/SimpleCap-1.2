@@ -49,10 +49,16 @@
 {
     return [_name compare:entry.name];
 }
+
 @end
 
 //---------------------------------------------------------------------------
-@implementation ApplicationMenu
+@implementation ApplicationMenu {
+    id _delegate;
+    NSArray* _menu_items;
+    NSMenu* _prefered_menu;
+    NSMenuItem* _prefered_menu_item;
+}
 
 - (NSMenuItem*)menuItemWithAppEntry:(AppEntry*)entry
 {
@@ -119,8 +125,7 @@
     _menu_items = item_list;
 }
 
-- (id)initWithTargetPath:(NSString*)path Delegate:(id)delegate;
-{
+- (instancetype)initWithTargetPath:(NSString*)path delegate:(id)delegate {
     self = [super init];
     if (self) {
         _delegate = delegate;

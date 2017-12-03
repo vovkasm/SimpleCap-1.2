@@ -300,8 +300,7 @@ void fsevents_callback(
         _is_init_panel_position = YES;
 
         NSString* path = [[NSBundle mainBundle] pathForImageResource:@"dummy.png"];
-        _app_menu = [[ApplicationMenu alloc] initWithTargetPath:path
-                                                       Delegate:self];
+        _app_menu = [[ApplicationMenu alloc] initWithTargetPath:path delegate:self];
         
         _app_pallete = [[ApplicationButtonPallete alloc] init];
         _app_pallete.action = @selector(clickApplicationPalleteAtRow:withCell:);

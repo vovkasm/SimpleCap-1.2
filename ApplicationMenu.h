@@ -8,15 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface ApplicationMenu : NSObject
 
-@interface ApplicationMenu : NSObject {
-
-	id _delegate;
-	NSArray* _menu_items;
-	NSMenu* _prefered_menu;
-	NSMenuItem* _prefered_menu_item;
-}
-- (id)initWithTargetPath:(NSString*)path Delegate:(id)delegate;
+- (instancetype)initWithTargetPath:(NSString*)path delegate:(id)delegate;
 - (NSArray*)menuItems;
 - (NSMenu*)menu;
 - (NSInteger)indexForPath:(NSString*)path;
