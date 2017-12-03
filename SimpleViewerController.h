@@ -8,7 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SimpleViewerController : NSObject <NSMenuDelegate, NSWindowDelegate, NSTextFieldDelegate>
+#import "ApplicationMenu.h"
+
+@interface SimpleViewerController : NSObject <ApplicationMenuDelegate, NSMenuDelegate, NSWindowDelegate, NSTextFieldDelegate>
 
 - (void)close;
 - (void)show;

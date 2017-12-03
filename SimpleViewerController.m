@@ -42,10 +42,10 @@ enum SV_TAG {
 #define FILENAME_TEXTFIELD_PADDING_Y 7
 #define METALINE_MARGIN_X    0
 #define METALINE_MARGIN_Y    3
-#define    METALINE_HEIGHT        (FILENAME_TEXTFIELD_HEIGHT+METALINE_MARGIN_Y*2+2)
+#define METALINE_HEIGHT        (FILENAME_TEXTFIELD_HEIGHT+METALINE_MARGIN_Y*2+2)
 #define BUTTON_BAR_HEIGHT    (12.0+13)
 #define BUTTON_MARGIN_BOTTOM    8
-#define    BUTTON_MARGIN_LEFT        5
+#define BUTTON_MARGIN_LEFT        5
 #define IMAGEVIEW_MARGIN_X    1
 #define IMAGEVIEW_MARGIN_Y    1
 
@@ -1004,12 +1004,12 @@ void fsevents_callback(
     }
 }
 
--(void)openWithApplication:(id)sender {
+- (void)openWithApplication:(id)sender {
     NSDictionary* dict = [sender representedObject];
     [_app_controller openFile:_filename withApplication:[dict objectForKey:@"path"]];
 }
 
--(void)clickApplicationPalleteAtRow:(NSInteger)row withCell:(ApplicationButtonCell*)cell {
+- (void)clickApplicationPalleteAtRow:(NSInteger)row withCell:(ApplicationButtonCell*)cell {
     [_app_controller openFile:_filename withApplication:cell.path];
 }
 

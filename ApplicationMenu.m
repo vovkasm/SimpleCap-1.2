@@ -53,8 +53,13 @@
 @end
 
 //---------------------------------------------------------------------------
+@interface ApplicationMenu ()
+
+@property (nonatomic, weak) id<ApplicationMenuDelegate> delegate;
+
+@end
+
 @implementation ApplicationMenu {
-    id _delegate;
     NSArray* _menu_items;
     NSMenu* _prefered_menu;
     NSMenuItem* _prefered_menu_item;
@@ -203,9 +208,7 @@
 
     // open preferences
     NSString* title = NSLocalizedString(@"MenuSetupApplications", @"");
-    NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title
-                                       action:@selector(openPereferecesWindow:)
-                                keyEquivalent:@""];
+    NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openPereferecesWindow:) keyEquivalent:@""];
     [item setTarget:_delegate];
     [item setRepresentedObject:[NSNumber numberWithInt:3]];        // 3->Preference Tab:3 (viewer option)
     [menu addItem:item];
