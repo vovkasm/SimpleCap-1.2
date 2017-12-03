@@ -8,11 +8,9 @@
 
 #import "FukidashiWindow.h"
 
-
 @implementation FukidashiWindow
 
-- (id)init
-{
+- (id)init {
 	NSRect frame = NSZeroRect;
 	self = [super initWithContentRect:frame
 							styleMask:NSTexturedBackgroundWindowMask

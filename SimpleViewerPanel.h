@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class SimpleViewerController;
+
 @interface SimpleViewerPanel : NSPanel <NSAnimationDelegate>
 
 - (id)initWithController:(SimpleViewerController*)controller;

@@ -8,11 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface DialogMessage : NSObject {
-
-	NSDictionary* _attribute;
-	NSShadow* _shadow;
-}
+@interface DialogMessage : NSObject
 
 + (DialogMessage*)defaultMessage;
 - (NSSize)sizeOfMessage:(NSString*)message;

@@ -9,7 +9,12 @@
 #import "FukidashiView.h"
 
 
-@implementation FukidashiView
+@implementation FukidashiView {
+    NSString* _message;
+    NSMutableDictionary *_string_attributes;
+    NSShadow* _shadow;
+    int _position;
+}
 
 #define BACKGROUND_PADDING_X    10.0
 #define BACKGROUND_PADDING_Y    1.5

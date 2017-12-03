@@ -38,8 +38,6 @@
     return YES;
 }
 
-
-
 #define FADE_DURATION    0.15
 #define ZOOM_DURATION    0.35
 - (void)show
@@ -58,8 +56,7 @@
     [dict setObject:[NSValue valueWithRect:[self frame]] forKey:NSViewAnimationStartFrameKey];
     [dict setObject:[NSValue valueWithRect:[self frame]] forKey:NSViewAnimationEndFrameKey];
     
-    NSViewAnimation *anim = [[NSViewAnimation alloc]
-                             initWithViewAnimations:[NSArray arrayWithObject:dict]];
+    NSViewAnimation *anim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:dict]];
     [anim setDuration:FADE_DURATION];
     [anim setAnimationCurve:NSAnimationEaseIn];
     

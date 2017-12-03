@@ -152,19 +152,15 @@ void fsevents_callback(
 
 #pragma mark -
 #pragma mark Handling KVO event
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context
-{
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     // keyPath=values.General_ImageLocation
     [self updateFSEventStream];
 }
 
 #pragma mark -
 #pragma mark Initialization and deallocation
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         _panel = [[SimpleViewerPanel alloc] initWithController:self];
@@ -271,8 +267,7 @@ void fsevents_callback(
                                          tooltip:NSLocalizedString(@"ViewerSave", @"")
                                            group:nil];
 */        
-        _image_view = [[SimpleViewerImageView alloc] 
-                        initWithFrame:NSZeroRect withController:self];
+        _image_view = [[SimpleViewerImageView alloc] initWithFrame:NSZeroRect withController:self];
         
         _info_view = [[SimpleViewerInfoView alloc] initWithFrame:NSZeroRect];
         
@@ -318,8 +313,7 @@ void fsevents_callback(
 }
 
 
--(void)awakeFromNib
-{
+-(void)awakeFromNib {
     [_capture_app_menu setDelegate:self];
     [_config_menu setDelegate:self];
     [_context_menu setDelegate:self];
@@ -329,8 +323,8 @@ void fsevents_callback(
     [self updateFSEventStream];
     [UserDefaults addObserver:self forKey:UDKEY_IMAGE_LOCATION];
 }
-- (void)menuWillOpen:(NSMenu *)menu
-{
+
+- (void)menuWillOpen:(NSMenu *)menu {
     if (menu == _capture_app_menu) {
         [_app_controller updateApplicationMenu:_capture_app_menu];
     }
@@ -339,8 +333,7 @@ void fsevents_callback(
 //
 // private methods
 //
-- (void)updateInfomation
-{
+- (void)updateInfomation {
     int index = [[_app_controller fileManager] index];
     int count = [[_app_controller fileManager] count];
     if (count == 0) {
@@ -353,8 +346,7 @@ void fsevents_callback(
     
 }
 
-- (void)layoutViews
-{
+- (void)layoutViews {
     NSRect frame_content_view = [[_panel contentView] frame];
 
     NSRect frame_image_view = frame_content_view;
@@ -388,14 +380,12 @@ void fsevents_callback(
     [_app_pallete updateLayout];
 }
 
-- (NSSize)minimumContentSize
-{
+- (NSSize)minimumContentSize {
     NSSize size = NSMakeSize(340.0, 200.0);
     return size;
 }
 
-- (NSSize)maximumContentSize
-{
+- (NSSize)maximumContentSize {
     NSRect frame = [[NSScreen mainScreen] visibleFrame];
     NSSize size;
     size.width  = (int)(frame.size.width  * 0.8);
@@ -403,8 +393,7 @@ void fsevents_callback(
     return size;
 }
 
-- (NSSize)adjustContentSize:(NSSize)content_size
-{
+- (NSSize)adjustContentSize:(NSSize)content_size {
     NSSize min_size = [self minimumContentSize];
 
     if (content_size.width  < min_size.width) {
@@ -416,8 +405,7 @@ void fsevents_callback(
     return content_size;
 }
 
-- (void)adjustPanelFrameWithContentSize:(NSSize)content_size
-{
+- (void)adjustPanelFrameWithContentSize:(NSSize)content_size {
     // (1) adjust size
     NSSize max_size = [self maximumContentSize];
 
@@ -448,14 +436,12 @@ void fsevents_callback(
 //
 // delegate for SimpleViewerPanel
 //
-- (void)windowDidResize:(NSNotification *)notification
-{
+- (void)windowDidResize:(NSNotification *)notification {
 //    _is_operating = NO;
     [self layoutViews];
 }
 
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
-{
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
     
     NSRect rect = [sender frame];
     rect.size = frameSize;
@@ -467,8 +453,8 @@ void fsevents_callback(
 
     return rect.size;
 }
--(NSString*)title
-{
+
+-(NSString*)title {
     /*
     NSSize size = [[_image_view image] size];
     NSDate* created = [[_app_controller fileManager] currentFile].created;
@@ -485,8 +471,7 @@ void fsevents_callback(
     return title;
 }
 
--(NSDate*)fileModificationDateWithPath:(NSString*)path
-{
+-(NSDate*)fileModificationDateWithPath:(NSString*)path {
     NSFileManager* fm = [NSFileManager defaultManager];
     NSError* error = nil;
     NSDictionary* attrs = [fm attributesOfItemAtPath:path error:&error];
@@ -496,12 +481,10 @@ void fsevents_callback(
     return [attrs fileModificationDate];
 }
 
--(void)setFilename:(NSString*)filename
-{
+-(void)setFilename:(NSString*)filename {
     _filename = filename;
     
     [_filename_textfiled setStringValue:[self title]];
-//    [_panel setTitle:@"SimpleCap Viewer"];
 
     if (_filename) {
         _file_lastmodified = [self fileModificationDateWithPath:_filename];
@@ -509,13 +492,12 @@ void fsevents_callback(
         _file_lastmodified = nil;
     }
 }
-- (NSString*)filename
-{
+
+- (NSString*)filename {
     return _filename;
 }
 
--(BOOL)updateOpendFile
-{
+-(BOOL)updateOpendFile {
     NSString* filename = [self filename];
     NSDate* date = [self fileModificationDateWithPath:filename];
     if ([date compare:_file_lastmodified] == NSOrderedDescending) {
@@ -529,8 +511,7 @@ void fsevents_callback(
 //
 // for client code
 //
-- (void)showFile:(NSString*)filename isFitToImage:(BOOL)is_fit withDirection:(int)direction
-{
+- (void)showFile:(NSString*)filename isFitToImage:(BOOL)is_fit withDirection:(int)direction {
     NSImage* image = [[NSImage alloc] initWithContentsOfFile:filename];
     NSString* title;
 
@@ -563,10 +544,9 @@ void fsevents_callback(
     [_info_view setNeedsDisplay:YES];
 }
 
-- (void)openWithFile:(NSString*)filename isNew:(BOOL)new_flag
-{
+- (void)openWithFile:(NSString*)filename isNew:(BOOL)isNew {
     int dir;
-    if (new_flag) {
+    if (isNew) {
         dir = SV_TRANTYPE_NEW;
     } else {
         dir = SV_TRANTYPE_OPEN;
@@ -575,24 +555,21 @@ void fsevents_callback(
     [_panel show];
 }
 
-- (void)show
-{
+- (void)show {
     [self flagsChanged:nil];
     [_panel show];
 }
 
--(void)close
-{
+-(void)close {
     [_panel hide];
 }
-- (BOOL)isOpened
-{
+
+- (BOOL)isOpened {
     return [_panel isOpened];
 }
 
 // manage filename changing
-- (void)endEditFilenameIsCancel:(BOOL)is_cancel
-{
+- (void)endEditFilenameIsCancel:(BOOL)is_cancel {
     if (![_filename_textfiled isEnabled]) {
         return;
     }
@@ -642,8 +619,7 @@ void fsevents_callback(
 }
 
 // handling buttons
--(void)clickedAtTag:(NSNumber*)tag event:(NSEvent*)event
-{
+-(void)clickedAtTag:(NSNumber*)tag event:(NSEvent*)event {
     if ([_filename_textfiled isEditing]) {
         [_filename_textfiled textDidEndEditing:nil];
     }
@@ -683,7 +659,7 @@ void fsevents_callback(
             break;
             
         case SV_TAG_APPLICATION:
-            [NSMenu popUpContextMenu:[_app_menu menu] withEvent:event forView:nil];
+            [NSMenu popUpContextMenu:[_app_menu menu] withEvent:event forView:_panel.contentView];
             break;
             
         case SV_TAG_PREVIOUS_FILE:
@@ -725,12 +701,7 @@ void fsevents_callback(
             break;
             
         case SV_TAG_CAPTURE:
-            /*
-             [self close];
-             [_app_controller captureByLastHandler];
-             */
-            [NSMenu popUpContextMenu:_capture_menu withEvent:event forView:nil];
-            //            [[_app_controller fileManager] lastFilename];    // only to update directory info
+            [NSMenu popUpContextMenu:_capture_menu withEvent:event forView:_panel.contentView];
             break;
             
         case SV_TAG_CAPTURE_AGAIN:
@@ -747,11 +718,11 @@ void fsevents_callback(
             break;
             
         case SV_TAG_CONFIG:
-            [NSMenu popUpContextMenu:_config_menu withEvent:event forView:nil];
+            [NSMenu popUpContextMenu:_config_menu withEvent:event forView:_panel.contentView];
             break;
 
         case SV_TAG_OPERATION:
-            [NSMenu popUpContextMenu:_operation_menu withEvent:event forView:nil];
+            [NSMenu popUpContextMenu:_operation_menu withEvent:event forView:_panel.contentView];
             break;
             
     }
@@ -759,13 +730,11 @@ void fsevents_callback(
     [self endEditFilenameIsCancel:NO];
 }
 
-- (CGFloat)reductionRatio
-{
+- (CGFloat)reductionRatio {
     return [_image_view reductionRatio];
 }
 
-- (NSBitmapImageRep*)currentBitmapImageRepIsReduction:(BOOL)is_reduction
-{
+- (NSBitmapImageRep*)currentBitmapImageRepIsReduction:(BOOL)is_reduction {
     NSImage* image = [_image_view image];
     
     if (!image) {
@@ -800,10 +769,9 @@ void fsevents_callback(
 
     NSData* data = [new_image TIFFRepresentation];
     return [NSBitmapImageRep imageRepWithData:data];
-
 }
-- (void)keyDown:(id)theEvent
-{
+
+- (void)keyDown:(id)theEvent {
     int is_command = [theEvent modifierFlags] & NSCommandKeyMask;
     int is_alternate = [theEvent modifierFlags] & NSAlternateKeyMask;
 //    int is_shift = [theEvent modifierFlags] & NSShiftKeyMask;
@@ -877,15 +845,12 @@ void fsevents_callback(
 }
 
 // Panel delegate
-- (void)windowDidResignKey:(NSNotification *)notification
-{
+- (void)windowDidResignKey:(NSNotification *)notification {
     [self endEditFilenameIsCancel:NO];
 }
 
 // Filename delegate
-- (BOOL)control:(NSControl *)control
-       textView:(NSTextView *)textView doCommandBySelector:(SEL)command
-{
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command {
     if (command == @selector(cancel:)) {
         [self endEditFilenameIsCancel:YES];
         return YES;
@@ -894,69 +859,55 @@ void fsevents_callback(
 }
 
 // for Application Menu
-- (void)openPereferecesWindow:(id)tab_index
-{
+- (void)openPereferecesWindow:(id)tab_index {
     [_app_controller openPereferecesWindow:tab_index];
 }
 
 // for SimpleViewerImageView
-- (NSMenu *)menuForEvent:(NSEvent *)theEvent
-{
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent {
     return _context_menu;
 }
-- (void)copyFileTo:(NSURL*)dst_url
-{
-    id dst_path = [[dst_url relativePath]
-                   stringByAppendingPathComponent:[_filename lastPathComponent]];
-    [[NSFileManager defaultManager] copyPath:_filename 
-                                      toPath:dst_path
-                                     handler:nil];
+
+- (void)copyFileTo:(NSURL*)dst_url {
+    NSString* dst_path = [[dst_url relativePath] stringByAppendingPathComponent:[_filename lastPathComponent]];
+    [[NSFileManager defaultManager] copyPath:_filename toPath:dst_path handler:nil];
 }
 
 // for IB
-- (IBAction)clickedCopy:(id)sender
-{
+- (IBAction)clickedCopy:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_COPY] event:nil];
 }
 
-- (IBAction)clickedMoveToTrash:(id)sender
-{
+- (IBAction)clickedMoveToTrash:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_TRASH] event:nil];
 }
 
-- (IBAction)clickedSave:(id)sender
-{
+- (IBAction)clickedSave:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_SAVE] event:nil];
 }
-- (IBAction)clickedPrevious:(id)sender
-{
+
+- (IBAction)clickedPrevious:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_PREVIOUS_FILE] event:nil];
 }
 
-- (IBAction)clickedNext:(id)sender
-{
+- (IBAction)clickedNext:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_NEXT_FILE] event:nil];
 }
 
-- (IBAction)clickedCaptureAgain:(id)sender
-{
+- (IBAction)clickedCaptureAgain:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_CAPTURE_AGAIN] event:nil];
 }
 
-- (IBAction)clickedRetake:(id)sender
-{
+- (IBAction)clickedRetake:(id)sender {
     [self clickedAtTag:[NSNumber numberWithInt:SV_TAG_RETAKE] event:nil];
 }
 
-- (IBAction)clickedOpenWithApplication:(id)sender
-{
+- (IBAction)clickedOpenWithApplication:(id)sender {
     // *not implemented*
 }
 
--(NSString*)dupFilename:(NSString*)baseFilename extension:(NSString*)ext path:(NSString*)path number:(NSUInteger)num
-{
-    NSString* filename = [NSString stringWithFormat:@"%@/%@(%d).%@",
-                          path, baseFilename, num, ext];
+-(NSString*)dupFilename:(NSString*)baseFilename extension:(NSString*)ext path:(NSString*)path number:(NSUInteger)num {
+    NSString* filename = [NSString stringWithFormat:@"%@/%@(%lu).%@", path, baseFilename, (unsigned long)num, ext];
     NSFileManager* fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:filename]) {
         filename = [self dupFilename:baseFilename extension:ext path:path number:num+1];
@@ -964,8 +915,7 @@ void fsevents_callback(
     return filename;
 }
 
--(NSString*)dupFilename:(NSString*)filePath
-{
+-(NSString*)dupFilename:(NSString*)filePath {
     NSString* filename = [filePath lastPathComponent];
     NSString* filenameWithoutExtension = [filename stringByDeletingPathExtension];
     NSString* extension = [filePath pathExtension];
@@ -990,8 +940,7 @@ void fsevents_callback(
     return newFilename;
 }
 
-- (IBAction)clickedDuplicate:(id)sender
-{
+- (IBAction)clickedDuplicate:(id)sender {
     NSString* new_filename = [self dupFilename:_filename];
     NSFileManager* fm = [NSFileManager defaultManager];
     NSError* error = nil;
@@ -1010,12 +959,11 @@ void fsevents_callback(
 }    
 
 // for Context Menu (bindings)
-- (BOOL)backgroundBlack
-{
+- (BOOL)backgroundBlack {
     return ([[UserDefaults valueForKey:UDKEY_VIEWER_BACKGROUND] intValue] == 0);
 }
-- (void)setBackgroundBlack:(BOOL)flag
-{
+
+- (void)setBackgroundBlack:(BOOL)flag {
     if (flag) {
         [UserDefaults setValue:[NSNumber numberWithInt:0] forKey:UDKEY_VIEWER_BACKGROUND];
         [self setBackgroundCheckboard:NO];
@@ -1025,12 +973,12 @@ void fsevents_callback(
         [self setBackgroundCheckboard:YES];
     }
 }
-- (BOOL)backgroundCheckboard
-{
+
+- (BOOL)backgroundCheckboard {
     return ([[UserDefaults valueForKey:UDKEY_VIEWER_BACKGROUND] intValue] == 1);
 }
-- (void)setBackgroundCheckboard:(BOOL)flag
-{
+
+- (void)setBackgroundCheckboard:(BOOL)flag {
     if (flag) {
         [UserDefaults setValue:[NSNumber numberWithInt:1] forKey:UDKEY_VIEWER_BACKGROUND];
         [self setBackgroundBlack:NO];
@@ -1040,12 +988,12 @@ void fsevents_callback(
         [self setBackgroundWhite:YES];
     }
 }
-- (BOOL)backgroundWhite
-{
+
+- (BOOL)backgroundWhite {
     return ([[UserDefaults valueForKey:UDKEY_VIEWER_BACKGROUND] intValue] == 2);
 }
-- (void)setBackgroundWhite:(BOOL)flag
-{
+
+- (void)setBackgroundWhite:(BOOL)flag {
     if (flag) {
         [UserDefaults setValue:[NSNumber numberWithInt:2] forKey:UDKEY_VIEWER_BACKGROUND];
         [self setBackgroundBlack:NO];
@@ -1056,25 +1004,23 @@ void fsevents_callback(
     }
 }
 
--(void)openWithApplication:(id)sender
-{
+-(void)openWithApplication:(id)sender {
     NSDictionary* dict = [sender representedObject];
     [_app_controller openFile:_filename withApplication:[dict objectForKey:@"path"]];
 }
 
--(void)clickApplicationPalleteAtRow:(NSInteger)row withCell:(ApplicationButtonCell*)cell
-{
+-(void)clickApplicationPalleteAtRow:(NSInteger)row withCell:(ApplicationButtonCell*)cell {
     [_app_controller openFile:_filename withApplication:cell.path];
 }
 
-- (void)flagsChanged:(NSEvent *)theEvent
-{
+- (void)flagsChanged:(NSEvent *)theEvent {
     NSUInteger modifierFlags = [theEvent modifierFlags];
     
     [_button_bar resetGroup:@"REPEAT"];
     if (modifierFlags & NSAlternateKeyMask) {
         [_button_bar switchGroup:@"REPEAT"];
     }
-    [_button_bar setNeedsDisplay:YES];}
+    [_button_bar setNeedsDisplay:YES];
+}
 
 @end

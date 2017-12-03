@@ -24,9 +24,20 @@ enum FUKIDASHI_STATE {
 #define FUKIDASHI_SHOW_TIME        1.5
 #define FUKIDASHI_FADEOUT_TIME    1.75
 
-@implementation FukidashiController
+@implementation FukidashiController {
+    FukidashiWindow* _window;
+    FukidashiView* _view;
+    
+    int _state;
+    NSTimer* _timer;
+    int _count;
+    int _showtime;
+    
+    NSPoint _base_position;
+}
 
 static FukidashiController* _controller = nil;
+
 +(FukidashiController*)sharedConroller
 {
     if (_controller == nil) {

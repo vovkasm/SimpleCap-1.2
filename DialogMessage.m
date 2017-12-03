@@ -8,8 +8,10 @@
 
 #import "DialogMessage.h"
 
-
-@implementation DialogMessage
+@implementation DialogMessage {
+    NSDictionary* _attribute;
+    NSShadow* _shadow;
+}
 
 - (id)init
 {

@@ -8,9 +8,5 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface FukidashiWindow : NSWindow {
-
-}
-
+@interface FukidashiWindow : NSWindow
 @end
