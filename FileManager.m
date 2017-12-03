@@ -14,7 +14,15 @@
 
 #define FILENAME_NUMBER_MAX		9999
 
-@implementation FileManager
+@implementation FileManager {
+    int _index;
+    
+    FileList* _file_list;
+    FileEntry* _current_file;
+    
+    NSString* _serial_filename;
+    BOOL _serial_flag;
+}
 
 - (id)init
 {

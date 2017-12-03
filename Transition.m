@@ -12,7 +12,20 @@
 
 #import <QuartzCore/CoreImage.h>
 
-@implementation Transition
+@implementation Transition  {
+    NSNumber *_inputTime;
+    NSNumber *_inputWidth;
+    NSNumber *_inputScale;
+    NSNumber *_framePerSec;
+    NSNumber *_totalSec;
+    
+    CIFilter* _filter;
+    NSInteger _count;
+    
+    NSView* _view;
+    BOOL _finished;
+    id _target;
+}
 
 @synthesize inputTime = _inputTime;
 @synthesize inputWidth = _inputWidth;

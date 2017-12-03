@@ -9,21 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface Transition : NSObject {
-
-	NSNumber *_inputTime;
-	NSNumber *_inputWidth;
-	NSNumber *_inputScale;
-	NSNumber *_framePerSec;
-	NSNumber *_totalSec;
-	
-	CIFilter* _filter;
-	NSInteger _count;
-	
-	NSView* _view;
-	BOOL _finished;
-	id _target;
-}
+@interface Transition : NSObject
 
 @property (retain) NSNumber* inputTime;
 @property (retain) NSNumber *inputWidth;

@@ -15,6 +15,7 @@
 #import "AppController.h"
 #import "Transition.h"
 #import "TimerClient.h"
+#import "CaptureView.h"
 
 @interface CaptureController : NSObject
 

@@ -8,12 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class CaptureView;
-@class AppController;
+@interface CaptureWindow : NSPanel
 
-@interface CaptureWindow : NSPanel {
-
-}
 - (id)initWithFrame:(NSRect)frame;
 
 @end

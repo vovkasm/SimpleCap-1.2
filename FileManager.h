@@ -10,16 +10,9 @@
 
 @class FileList;
 @class FileEntry;
-@interface FileManager : NSObject {
 
-	int _index;
-	
-	FileList* _file_list;
-	FileEntry* _current_file;
+@interface FileManager : NSObject
 
-	NSString* _serial_filename;
-	BOOL _serial_flag;
-}
 - (NSString*)path;
 - (NSString*)nextFilename;
 - (NSString*)saveImage:(NSBitmapImageRep*)bitmap_rep;

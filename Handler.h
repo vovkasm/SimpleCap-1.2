@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "WindowLayer.h"
 
-@protocol Handler
+@protocol Handler <NSObject>
 
 - (void)reset;
 - (void)setup;
