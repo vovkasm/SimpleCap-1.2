@@ -10,9 +10,10 @@
 
 
 @interface LaunchedApplications : NSObject {
-
 	id	_delegate;
 }
--(void)updateApplicationMenu:(NSMenu*)menu;
-- (id)initWithDelegate:(id)delegate;
+
+- (instancetype)initWithDelegate:(id)delegate;
+- (void)updateApplicationMenu:(NSMenu*)menu;
+
 @end
