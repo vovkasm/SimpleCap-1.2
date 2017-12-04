@@ -8,10 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface DesktopWindow : NSObject {
-
-	NSMutableArray* _id_list;
-}
+@interface DesktopWindow : NSObject
 
 + (DesktopWindow*)sharedDesktopWindow;
 - (NSArray*)CGWindowIDlist;

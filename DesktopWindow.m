@@ -8,12 +8,13 @@
 
 #import "DesktopWindow.h"
 
-@implementation DesktopWindow
+@implementation DesktopWindow {
+    NSArray* _idList;
+}
 
 static DesktopWindow* _desktop_window = nil;
 
-+ (DesktopWindow*)sharedDesktopWindow
-{
++ (DesktopWindow*)sharedDesktopWindow {
     if (!_desktop_window) {
         _desktop_window = [[DesktopWindow alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:_desktop_window
@@ -25,39 +26,36 @@ static DesktopWindow* _desktop_window = nil;
     return _desktop_window;
 }
 
-- (void) dealloc
-{
+- (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)update
-{
+- (void)update {
     CFArrayRef ar = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
-    CFDictionaryRef window;
-    CFIndex i;
-    CGWindowID wid;
-
-    _id_list = [[NSMutableArray alloc] init];
-
-    for (i=0; i < CFArrayGetCount(ar); i++) {
-        window = CFArrayGetValueAtIndex(ar, i);
+    
+    NSMutableArray* windowIds = [[NSMutableArray alloc] init];
+    
+    for (CFIndex i=0; i < CFArrayGetCount(ar); i++) {
+        CFDictionaryRef window = CFArrayGetValueAtIndex(ar, i);
         NSString* name = (NSString*)CFDictionaryGetValue(window, kCGWindowName);
         NSString* owner_name = (NSString*)CFDictionaryGetValue(window, kCGWindowOwnerName);
         if ([name isEqualToString:@"Desktop"] && [owner_name isEqualToString:@"Window Server"]) {
-            CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowNumber),
-                             kCGWindowIDCFNumberType, &wid);
-            [_id_list addObject:[NSNumber numberWithUnsignedInt:wid]];
+            CGWindowID wid;
+            CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowNumber), kCGWindowIDCFNumberType, &wid);
+            [windowIds addObject:[NSNumber numberWithUnsignedInt:wid]];
         }
     }
+    
+    CFRelease(ar);
+    
+    _idList = windowIds;
 }
 
-- (NSArray*)CGWindowIDlist
-{
-    return _id_list;
+- (NSArray*)CGWindowIDlist {
+    return _idList;
 }
 
-- (void)screenChanged:(NSNotification *)notification
-{
+- (void)screenChanged:(NSNotification *)notification {
     [self update];
 }
 

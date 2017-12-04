@@ -377,7 +377,7 @@ static NSShadow* _shadow = nil;
 #define SBBF_MARGIN 10.0
 #define BUTTON_OFFSET 10.0
 -(void)setButtonBarWithFrame:(NSRect)frame {
-    NSPoint p;
+    NSPoint p = NSZeroPoint;
     NSSize button_size = [self bounds].size;
     
     NSSize view_size = [[Screen defaultScreen] frame].size;

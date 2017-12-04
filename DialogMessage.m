@@ -17,9 +17,7 @@
 {
     self = [super init];
     if (self) {
-        NSMutableDictionary*dict = [[NSMutableDictionary alloc] init];
-        
-        dict = [NSMutableDictionary dictionary];
+        NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         [dict setObject:[NSColor whiteColor]
                  forKey:NSForegroundColorAttributeName];
         [dict setObject:[NSFont boldSystemFontOfSize:14.0]

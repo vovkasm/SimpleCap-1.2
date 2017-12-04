@@ -677,7 +677,7 @@
     for (id item in loginItemsArray)
     {        
         LSSharedFileListItemRef itemRef = (__bridge LSSharedFileListItemRef)item;
-        NSURL* url = (__bridge NSURL*)LSSharedFileListItemCopyResolvedURL(itemRef, 0, nil);
+        NSURL* url = (__bridge_transfer NSURL*)LSSharedFileListItemCopyResolvedURL(itemRef, 0, nil);
         if (url) {
             if ([url.path hasPrefix:[[NSBundle mainBundle] bundlePath]]) {
                 is_enable = YES;

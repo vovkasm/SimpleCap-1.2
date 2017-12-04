@@ -870,7 +870,7 @@ ResizeRule rules[8] = {
 #define FRAME_WIDTH            0.1
 #define SHADOW_ALPHA        0.75
 
-- (CGImageRef)capture
+- (CGImageRef)newCapture
 {
     _mouse_pointer_offset = NSZeroSize;
 
@@ -1104,24 +1104,24 @@ ResizeRule rules[8] = {
             break;
 
         case TAG_COPY:
-            [self.captureController copyImage:[self capture] imageFrame:_rect];
+            [self.captureController copyImage:[self newCapture] imageFrame:_rect];
             [self.captureController exit];
             break;
 
         case TAG_COPY_CONTINUOUS:
-            [self.captureController copyImage:[self capture] imageFrame:_rect];
+            [self.captureController copyImage:[self newCapture] imageFrame:_rect];
             break;
             
         case TAG_RECORD:
             [self.captureController setContinouslyFlag:NO];
-            [self.captureController saveImage:[self capture] imageFrame:_rect];
+            [self.captureController saveImage:[self newCapture] imageFrame:_rect];
 //            [_selection_history setSize:_rect.size];
             [self.captureController exit];
             break;
 
         case TAG_CONTINUOUS:
             [self.captureController setContinouslyFlag:YES];
-            [self.captureController saveImage:[self capture] imageFrame:_rect];
+            [self.captureController saveImage:[self newCapture] imageFrame:_rect];
 //            [_selection_history setSize:_rect.size];
             break;
 
@@ -1160,24 +1160,26 @@ ResizeRule rules[8] = {
 
 - (void)timerFinished:(TimerController*)controller
 {
+    CGImageRef cgImage = [self newCapture];
+    
     if ([controller isCopy]) {
         [self changeState:STATE_RUBBERBAND];
-        [self.captureController copyImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
+        [self.captureController copyImage:cgImage withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
         [self.captureController exit];
 
     } else if ([controller isContinous]) {
         [self.captureController setContinouslyFlag:YES];
-        [self.captureController saveImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
+        [self.captureController saveImage:cgImage withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
         [controller start];
-
     } else {
         // NORMAL
         [self changeState:STATE_RUBBERBAND];
-        [self.captureController saveImage:[self capture] withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
+        [self.captureController saveImage:cgImage withMouseCursorInRect:_rect offset:_mouse_pointer_offset imageFrame:_rect];
         [self.captureController openViewerWithLastfile];
         [self.captureController exit];
     }
-
+    
+    CGImageRelease(cgImage);
 }
 
 - (void)timerCanceled:(TimerController*)controller
