@@ -8,19 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface Window : NSObject
 
-@interface Window : NSObject {
-	int			_order;
-	CGWindowID	_window_id;
-	int			_owner_pid;
-	NSString*	_window_name;
-	NSString*	_owner_name;
-	int			_layer;
-	NSRect		_rect;		// coordinate system: local
-	NSImage*	_image;
-	int			_workspace;
-
-}
 -(int)order;
 -(void)setOrder:(int)order;
 -(CGWindowID)windowID;

@@ -11,9 +11,7 @@
 
 @implementation CoordinateConverter
 
-
-+ (NSPoint)convertFromLocalToCGWindowPoint:(NSPoint)from_p
-{
++ (NSPoint)convertFromLocalToCGWindowPoint:(NSPoint)from_p {
 	CGFloat cx1, cy1, lx1, ly1, sx1, sy2;
 	NSRect frame = [[Screen defaultScreen] frame];
 	NSRect m_frame = [[[NSScreen screens] objectAtIndex:0] frame];
@@ -30,8 +28,7 @@
 	return NSMakePoint(cx1, cy1);
 }
 
-+ (NSPoint)convertFromCGWindowPointToLocal:(NSPoint)from_p
-{
++ (NSPoint)convertFromCGWindowPointToLocal:(NSPoint)from_p {
 	CGFloat cx1, cy1, lx1, ly1, sx1, sy2;
 	NSRect frame = [[Screen defaultScreen] frame];
 	NSRect m_frame = [[[NSScreen screens] objectAtIndex:0] frame];
@@ -47,4 +44,5 @@
 	ly1 = cy1 + fabsf((float)(sy2 - sh));
 	return NSMakePoint(lx1, ly1);
 }
+
 @end

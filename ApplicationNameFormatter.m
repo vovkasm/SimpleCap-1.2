@@ -8,11 +8,10 @@
 
 #import "ApplicationNameFormatter.h"
 
-
 @implementation ApplicationNameFormatter
-- (NSString *)stringForObjectValue:(id)anObject
-{
-	NSString* name;
+
+- (NSString *)stringForObjectValue:(id)anObject {
+	NSString* name = nil;
     [[NSURL fileURLWithPath:anObject] getResourceValue:&name forKey:NSURLLocalizedNameKey error:nil];
 	
 	if (!name) {
@@ -21,8 +20,7 @@
 	return name;
 }
 
-- (BOOL)getObjectValue:(id *)anObject forString:(NSString *)string errorDescription:(NSString **)error
-{
+- (BOOL)getObjectValue:(id *)anObject forString:(NSString *)string errorDescription:(NSString **)error {
 	return NO;
 }
 

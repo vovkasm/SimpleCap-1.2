@@ -9,9 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface CoordinateConverter : NSObject {
+@interface CoordinateConverter : NSObject
 
-}
 + (NSPoint)convertFromLocalToCGWindowPoint:(NSPoint)from_p;
 + (NSPoint)convertFromCGWindowPointToLocal:(NSPoint)from_p;
 

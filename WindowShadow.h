@@ -9,8 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface WindowShadow : NSObject {
-}
+@interface WindowShadow : NSObject
+
 + (NSSize)offset;
 + (NSSize)size;
 + (CGRect)addShadowSizeToCGRect:(CGRect)cgrect;

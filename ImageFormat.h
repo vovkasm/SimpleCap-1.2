@@ -13,9 +13,7 @@
 #define IMAGEFORMAT_JPEG		2
 #define IMAGEFORMAT_CLIPBOARD	10
 
-@interface ImageFormat : NSObject {
-	
-}
+@interface ImageFormat : NSObject
 
 + (NSString*)imageFormatDescription;
 + (NSString*)imageFormatDescriptionWith:(int)image_format;

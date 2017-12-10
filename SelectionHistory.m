@@ -11,11 +11,11 @@
 
 #define MAX_HISTORY      10
 
-@implementation SelectionHistory
+@implementation SelectionHistory {
+    NSMutableArray* _history_list;
+}
 
-
-- (void)load
-{
+- (void)load {
 /*    if (_history_list) {
         [_history_list release];
     }
@@ -26,8 +26,8 @@
         [_history_list addObject:[NSValue valueWithSize:size]];
     }*/
 }
-- (void)save
-{
+
+- (void)save {
 /*    NSMutableArray* array = [NSMutableArray array];
     for (NSValue* value in _history_list) {
         NSString* size = NSStringFromSize([value sizeValue]);
@@ -37,8 +37,7 @@
     [UserDefaults save];*/
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         [self load];
@@ -47,8 +46,7 @@
 }
 
 
-- (void)setSize:(NSSize)size
-{
+- (void)setSize:(NSSize)size {
     NSValue* value = [NSValue valueWithSize:size];
     [_history_list addObject:value];
     if ([_history_list containsObject:value]) {
@@ -62,13 +60,11 @@
     [self save];
 }
 
-- (NSSize)sizeAtIndex:(int)index
-{
+- (NSSize)sizeAtIndex:(int)index {
     return [[_history_list objectAtIndex:index] sizeValue];
 }
 
-- (NSArray*)menuList
-{
+- (NSArray*)menuList {
     NSMutableArray* results = [NSMutableArray array];
     for (NSValue* value in _history_list) {
         NSSize size = [value sizeValue];
@@ -77,8 +73,7 @@
     return results;
 }
 
-+ (SelectionHistory*)selectionHistory
-{
++ (SelectionHistory*)selectionHistory {
     SelectionHistory* history = [[SelectionHistory alloc] init];
     return history;
 }

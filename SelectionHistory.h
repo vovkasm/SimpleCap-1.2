@@ -8,10 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SelectionHistory : NSObject {
+@interface SelectionHistory : NSObject
 
-	NSMutableArray* _history_list;
-}
 + (SelectionHistory*)selectionHistory;
 - (void)setSize:(NSSize)size;
 - (NSSize)sizeAtIndex:(int)index;

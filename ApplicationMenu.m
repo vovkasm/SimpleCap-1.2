@@ -11,25 +11,18 @@
 
 //---------------------------------------------------------------------------
 @interface AppEntry : NSObject
-{
-    NSString* _path;
-    NSString* _name;
-    NSImage* _image;
-}
+
 @property (strong) NSString* path;
 @property (strong) NSString* name;
 @property (strong) NSImage* image;
 
--(id)initWithPath:(NSString*)path;
+- (id)initWithPath:(NSString*)path;
+
 @end
 
 @implementation AppEntry
-@synthesize path = _path;
-@synthesize name = _name;
-@synthesize image = _image;
 
--(id)initWithPath:(NSString*)app_path
-{
+- (id)initWithPath:(NSString*)app_path {
     self = [super init];
     if (self) {
         _path = app_path;
@@ -45,8 +38,7 @@
     return self;
 }
 
-- (NSComparisonResult)compare:(AppEntry*)entry
-{
+- (NSComparisonResult)compare:(AppEntry*)entry {
     return [_name compare:entry.name];
 }
 
@@ -65,8 +57,7 @@
     NSMenuItem* _prefered_menu_item;
 }
 
-- (NSMenuItem*)menuItemWithAppEntry:(AppEntry*)entry
-{
+- (NSMenuItem*)menuItemWithAppEntry:(AppEntry*)entry {
     NSMenuItem* item = [[NSMenuItem alloc] init];
     [item setTitle:entry.name];
     [item setImage:entry.image];
@@ -77,8 +68,7 @@
     return item;
 }
 
-- (void)createMenuItemsWithTargetPath:(NSString*)target_path
-{
+- (void)createMenuItemsWithTargetPath:(NSString*)target_path {
     // *not be used* 2009-02-23
     NSURL* target_url = [NSURL fileURLWithPath:target_path];
     NSMutableArray* item_list = [NSMutableArray array];
@@ -139,13 +129,11 @@
     return self;
 }
 
-- (NSArray*)menuItems
-{
+- (NSArray*)menuItems {
     return _menu_items;
 }
 
-- (NSInteger)indexForPath:(NSString*)path
-{
+- (NSInteger)indexForPath:(NSString*)path {
     NSInteger index = 0;
     for (NSMenuItem* item in _menu_items) {
         NSDictionary* dict = [item representedObject];
@@ -159,15 +147,13 @@
     // not found: return 0
 }
 
-- (NSString*)pathAtIndex:(NSInteger)index
-{
+- (NSString*)pathAtIndex:(NSInteger)index {
     NSMenuItem* item = [_menu_items objectAtIndex:index];
     NSDictionary* dict = [item representedObject];
     return [dict objectForKey:@"path"];
 }
 
--(NSMenu*)menu
-{
+-(NSMenu*)menu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Application Menu"];
     NSString* path;
     AppEntry* entry;

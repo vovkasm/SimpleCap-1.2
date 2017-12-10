@@ -10,19 +10,27 @@
 #import "WindowLayer.h"
 #import "CoordinateConverter.h"
 
-@implementation Window
+@implementation Window {
+    int            _order;
+    CGWindowID    _window_id;
+    int            _owner_pid;
+    NSString*    _window_name;
+    NSString*    _owner_name;
+    int            _layer;
+    NSRect        _rect;        // coordinate system: local
+    NSImage*    _image;
+    int            _workspace;
+}
+
 - (id)initWithWindowDictionaryRef:(CFDictionaryRef)window
 {
     self = [super init];
     if (self) {
         CGRect cgrect;
 
-        CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowNumber),
-                         kCGWindowIDCFNumberType, &_window_id);
-        CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowOwnerPID),
-                         kCFNumberIntType, &_owner_pid);
-        CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowLayer),
-                         kCFNumberIntType, &_layer);
+        CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowNumber), kCGWindowIDCFNumberType, &_window_id);
+        CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowOwnerPID), kCFNumberIntType, &_owner_pid);
+        CFNumberGetValue(CFDictionaryGetValue(window, kCGWindowLayer), kCFNumberIntType, &_layer);
         CFNumberRef workspace = CFDictionaryGetValue(window, kCGWindowWorkspace);
         if (workspace) {
             CFNumberGetValue(workspace, kCFNumberIntType, &_workspace);

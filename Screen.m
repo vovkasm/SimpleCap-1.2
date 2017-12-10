@@ -9,10 +9,12 @@
 #import "Screen.h"
 
 
-@implementation Screen
+@implementation Screen {
+    NSRect _frame;
+    NSRect _menu_frame;
+}
 
-- (void)update
-{
+- (void)update {
 	NSScreen* screen;
 	
 	_frame = NSZeroRect;
@@ -30,8 +32,7 @@
 }
 
 static Screen* _screen = nil;
-+ (Screen*)defaultScreen
-{
++ (Screen*)defaultScreen {
 	if (!_screen) {
 		_screen = [[Screen alloc] init];
 
@@ -44,23 +45,19 @@ static Screen* _screen = nil;
 	return _screen;
 }
 
-- (void)screenChanged:(NSNotification *)notification
-{
+- (void)screenChanged:(NSNotification *)notification {
 	[self update];
 }
 
-- (NSRect)frame;
-{
+- (NSRect)frame {
 	return _frame;
 }
 
-- (NSRect)menuScreenFrame
-{
+- (NSRect)menuScreenFrame {
 	return _menu_frame;
 }
 
-- (CGRect)frameInCGCoordinate
-{
+- (CGRect)frameInCGCoordinate {
 	CGRect cgrect = NSRectToCGRect(_frame);
 	
 	cgrect.origin.y = _menu_frame.size.height

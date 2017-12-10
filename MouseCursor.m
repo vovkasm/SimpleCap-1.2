@@ -17,7 +17,11 @@ extern CGError CGSReleaseConnection(CGSConnectionRef);
 extern CGError CGSGetGlobalCursorDataSize(CGSConnectionRef, int*);
 extern CGError CGSGetGlobalCursorData(CGSConnectionRef, unsigned char*,int*, int*, CGRect*, CGPoint*, int*, int*, int*);
 
-@implementation MouseCursor
+@implementation MouseCursor {
+    NSImage*    _image;
+    NSPoint        _location;
+    NSPoint        _hot_spot;
+}
 
 - (NSPoint)convertPoint:(NSPoint)point
 {

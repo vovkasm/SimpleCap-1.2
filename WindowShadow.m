@@ -13,38 +13,33 @@ static NSSize _size;
 
 @implementation WindowShadow
 
-+ (void)initialize
-{
++ (void)initialize {
 	_offset = NSMakeSize(40, 20);
 	_size = NSMakeSize(80, 80);
 }
 
-+ (NSSize)offset
-{
++ (NSSize)offset {
 	return _offset;
 }
 
-+ (NSSize)size
-{
++ (NSSize)size {
 	return _size;
 }
 
-+ (CGRect)addShadowSizeToCGRect:(CGRect)cgrect
-{
++ (CGRect)addShadowSizeToCGRect:(CGRect)cgrect {
 	cgrect.origin.x -= _offset.width;
 	cgrect.origin.y -= _offset.height;
 	cgrect.size.width += _size.width;
 	cgrect.size.height += _size.height;
 	return cgrect;
 }
-+ (CGRect)subShadowSizeToCGRect:(CGRect)cgrect
-{
+
++ (CGRect)subShadowSizeToCGRect:(CGRect)cgrect {
 	cgrect.origin.x -= _offset.width;
 	cgrect.origin.y -= _offset.height;
 	cgrect.size.width -= _size.width;
 	cgrect.size.height -= _size.height;
 	return cgrect;
 }
-
 
 @end

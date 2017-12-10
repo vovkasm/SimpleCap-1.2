@@ -73,9 +73,7 @@
 #define UDKEY_TIMER_SECOND		@"Timer_Second"
 #define DEFAULT_TIMER_TIMES		10
 
-@interface UserDefaults : NSObject {
-
-}
+@interface UserDefaults : NSObject
 
 + (void)setup;
 + (NSUserDefaults*)values;

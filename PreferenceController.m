@@ -16,11 +16,10 @@
 
 #define PREFERENCE_TOOLBAR    @"PREFERENCE_TOOLBAR"
 #define TOOLBAR_GENERAL        @"TOOLBAR_GENERAL"
-#define    TOOLBAR_WINDOWS        @"TOOLBAR_WINDOWS"
-#define    TOOLBAR_SELECTION    @"TOOLBAR_SELECTION"
+#define TOOLBAR_WINDOWS        @"TOOLBAR_WINDOWS"
+#define TOOLBAR_SELECTION    @"TOOLBAR_SELECTION"
 #define TOOLBAR_ADVANCED    @"TOOLBAR_ADVANCED"
 #define TOOLBAR_VIEWER        @"TOOLBAR_VIEWER"
-//#define TOOLBAR_SCREEN        @"TOOLBAR_SCREEN"
 
 #define TAG_MOUSE_CURSOR    10
 #define TAG_WINDOW_SHADOW    11
@@ -49,8 +48,7 @@
     IBOutlet NSButton* _autostart_checkbox;
 }
 
--(id)init
-{
+-(id)init {
     self = [super init];
     if (self) {
         _toolbar_list = [NSArray arrayWithObjects:
@@ -58,7 +56,6 @@
                           TOOLBAR_WINDOWS,
                           TOOLBAR_SELECTION,
                           TOOLBAR_VIEWER,
-//                          TOOLBAR_SCREEN,
                           TOOLBAR_ADVANCED,
                           nil];
 
@@ -68,8 +65,7 @@
 
 //<<--------------------------------
 
-- (void)drawOutputExample
-{
+- (void)drawOutputExample {
     NSSize frame_size = [_image_view frame].size;
     NSImage* frame_image = [[NSImage alloc] initWithSize:frame_size];
     NSImage* example_image = [NSImage imageNamed:@"output_example"];
@@ -80,13 +76,12 @@
 
     // Background
     if ([[UserDefaults valueForKey:UDKEY_BACKGROUND] boolValue]) {
-        [[NSImage imageNamed:@"output_background"] compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+        [[NSImage imageNamed:@"output_background"] drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }
     [NSGraphicsContext saveGraphicsState];
 
     // Window Shadow
     if ([[UserDefaults valueForKey:UDKEY_WINDOW_SHADOW] boolValue]) {
-
         NSShadow* shadow = [[NSShadow alloc] init];
         [shadow setShadowOffset:NSMakeSize(10.0, -10.0)];
         [shadow setShadowBlurRadius:10.0];
@@ -94,31 +89,30 @@
         [shadow set];
 
     }
+    
     // Compsite Image
-    [example_image compositeToPoint:draw_point operation:NSCompositeSourceOver];
+    [example_image drawAtPoint:draw_point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 
     [NSGraphicsContext restoreGraphicsState];
     
     // Mouse Cursor
     if ([[UserDefaults valueForKey:UDKEY_MOUSE_CURSOR] boolValue]) {
         NSPoint cursor_point = NSMakePoint(50, 50);
-        [[[NSCursor arrowCursor] image] compositeToPoint:cursor_point operation:NSCompositeSourceOver];
+        [[[NSCursor arrowCursor] image] drawAtPoint:cursor_point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }
     
     [frame_image unlockFocus];
     [_image_view setImage:frame_image];
 }
 
-- (IBAction)clickImageOptions:(id)sender
-{
+- (IBAction)clickImageOptions:(id)sender {
     [self drawOutputExample];
 }
 
 #define WHITE_FRAME_WIDTH    3.0
 #define WHITE_FRAME_HEIGHT    3.0
 #define ROUND_RECT_RADIUS    7.0
-- (void)drawSelectionExample
-{
+- (void)drawSelectionExample {
     BOOL is_roundrect = [[UserDefaults valueForKey:UDKEY_SELECTION_ROUND_RECT] boolValue];
     BOOL is_white_frame = [[UserDefaults valueForKey:UDKEY_SELECTION_WHITE_FRAME] boolValue];
     BOOL is_exclude_desktop_icons = [[UserDefaults valueForKey:UDKEY_SELECTION_EXCLUDE_ICONS] boolValue];
@@ -213,7 +207,7 @@
         [round setClip];
     }
 
-    [example_image compositeToPoint:draw_point operation:NSCompositeSourceOver];
+    [example_image drawAtPoint:draw_point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 
     if (is_white_frame) {
         [[NSColor blackColor] set];
@@ -224,53 +218,19 @@
     // Mouse Cursor
     if ([[UserDefaults valueForKey:UDKEY_MOUSE_CURSOR] boolValue]) {
         NSPoint cursor_point = NSMakePoint(65, 25);
-        [[[NSCursor arrowCursor] image] compositeToPoint:cursor_point operation:NSCompositeSourceOver];
+        [[[NSCursor arrowCursor] image] drawAtPoint:cursor_point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f];
     }
     
     [frame_image unlockFocus];
     [_selection_view setImage:frame_image];
-    
 }
 
-/*
-- (void)drawScreenExample
-{
-    BOOL is_exclude_desktop_icons = [[UserDefaults valueForKey:UDKEY_SCREEN_EXCLUDE_ICONS] boolValue];
-    
-    NSSize frame_size = [_screen_view frame].size;
-    NSImage* frame_image = [[[NSImage alloc] initWithSize:frame_size] autorelease];
-    
-    NSString* example_image_name;
-    if (is_exclude_desktop_icons) {
-        example_image_name = @"selection_example2";
-    } else {
-        example_image_name = @"selection_example";
-    }
-    NSImage* example_image = [NSImage imageNamed:example_image_name];
-    NSSize example_image_size = [example_image size];
-    NSPoint draw_point = NSMakePoint((frame_size.width - example_image_size.width)/2, (frame_size.height - example_image_size.height)/2);
-    [frame_image lockFocus];
-    [example_image compositeToPoint:draw_point operation:NSCompositeSourceOver];
-    [frame_image unlockFocus];
-    [_screen_view setImage:frame_image];
-}
-
-*/
-
-- (IBAction)clickSelectionOptions:(id)sender
-{
+- (IBAction)clickSelectionOptions:(id)sender {
     [self drawSelectionExample];
 }
-/*
-- (IBAction)clickScreenOptions:(id)sender
-{
-    [self drawScreenExample];
-}
- */
 
 #define SC_MARGIN_BOTTOM    10
-- (void)updateWindow
-{
+- (void)updateWindow {
     NSTabViewItem *item = [_tab_view selectedTabViewItem];
     NSArray* subviews = [[item view] subviews];
     
@@ -303,12 +263,9 @@
     [anim setDuration:0.25];
     [anim setDelegate:self];
     [anim startAnimation];
-    
 }
 
-
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     _hotkey_register = [HotkeyRegister sharedRegister];
     
     _toolbar = [[NSToolbar alloc] initWithIdentifier:PREFERENCE_TOOLBAR];
@@ -324,8 +281,7 @@
     [self updateWindow];
 }
 
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
-{
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag {
     NSToolbarItem *toolbar_item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
 
     if ([itemIdentifier isEqualToString:TOOLBAR_GENERAL]) {
@@ -371,18 +327,16 @@
 
     return toolbar_item;
 }
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
-{
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar {
     return _toolbar_list;
 }
 
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
-{
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar {
     return _toolbar_list;
 }
 
-- (void)click:(id)sender
-{
+- (void)click:(id)sender {
     [_window setTitle:[sender label]];
 
     NSString* item_identifier = [sender itemIdentifier];
@@ -411,14 +365,12 @@
 
 }
 
--(NSArray*)toolbarSelectableItemIdentifiers:(NSToolbar*)toolbar
-{
+-(NSArray*)toolbarSelectableItemIdentifiers:(NSToolbar*)toolbar {
     return _toolbar_list;
 }
 
 
-- (void)chooseImageLocation:(id)sender
-{
+- (void)chooseImageLocation:(id)sender {
     NSString* path = [UserDefaults valueForKey:UDKEY_IMAGE_LOCATION];
     
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -441,8 +393,7 @@
     }
 }
 
-- (void)setTabIndex:(NSInteger)tab_index
-{
+- (void)setTabIndex:(NSInteger)tab_index {
     switch (tab_index) {
         case 0:
             [_tab_view selectTabViewItemAtIndex:tab_index];
@@ -480,33 +431,30 @@
             break;
     }
 }
-- (void)openAtTabIndex:(NSInteger)tab_index
-{
+
+- (void)openAtTabIndex:(NSInteger)tab_index {
     [self setTabIndex:tab_index];
     [NSApp activateIgnoringOtherApps:YES];
     [_window makeKeyAndOrderFront:self];
 //    [_window orderWindow:NSWindowAbove relativeTo:0];
 }
 
-- (BOOL)animationShouldStart:(NSAnimation *)animation
-{
+- (BOOL)animationShouldStart:(NSAnimation *)animation {
     [[[_tab_view selectedTabViewItem] view] setHidden:YES];
     return YES;
 }
-- (void)animationDidEnd:(NSAnimation *)animation
-{
+
+- (void)animationDidEnd:(NSAnimation *)animation {
     [[[_tab_view selectedTabViewItem] view] setHidden:NO];
 }
 
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem {
     [self updateWindow];
 }
 
-- (IBAction)chooseApplication:(id)sender
-{
+- (IBAction)chooseApplication:(id)sender {
     NSString* app;
-    int tag = [sender tag];
+    NSInteger tag = [sender tag];
     
     switch (tag) {
         case 1:
@@ -527,34 +475,32 @@
     }
     
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    [openPanel setCanChooseFiles:YES];
-    [openPanel setCanChooseDirectories:NO];
-    [openPanel setCanCreateDirectories:NO];
-    [openPanel setAllowsMultipleSelection:NO];
+    openPanel.canChooseFiles = YES;
+    openPanel.canChooseDirectories = NO;
+    openPanel.canCreateDirectories = NO;
+    openPanel.allowsMultipleSelection = NO;
+    openPanel.treatsFilePackagesAsDirectories = NO;
     
     NSString* title = NSLocalizedString(@"PreferenceRemoveApplication", @"");
     NSRect rect = NSZeroRect;
     rect.size = [title sizeWithAttributes:[NSDictionary dictionary]];
     rect.size.width += 20;
-    NSButton* check_box =
-        [[NSButton alloc] initWithFrame:rect];
+    NSButton* check_box = [[NSButton alloc] initWithFrame:rect];
     [check_box setButtonType:NSSwitchButton];
     [check_box setTitle:title];
     [openPanel setAccessoryView:check_box];
     
-    NSArray* file_types = [NSArray arrayWithObject:@"app"];
-    
-    int result = [openPanel runModalForDirectory:[app stringByDeletingLastPathComponent]
-                                            file:[app lastPathComponent]
-                                           types:file_types];
+    openPanel.allowedFileTypes = @[@"app"];
+    openPanel.directoryURL = [NSURL fileURLWithPath:app];
+    NSModalResponse result = [openPanel runModal];
     
     NSString* new_app = nil;
-    if (result == NSOKButton) {
+    if (result == NSModalResponseOK) {
 
         if ([check_box intValue] == 0) {
-            NSArray* filenames = [openPanel filenames];
-            if ([filenames count] > 0) {
-                new_app = [filenames objectAtIndex:0];
+            NSArray<NSURL*>* urls = openPanel.URLs;
+            if (urls.count > 0) {
+                new_app = urls[0].path;
             }
         }
         switch (tag) {
@@ -578,8 +524,7 @@
     }
 }
 
-- (IBAction)selectImageFormat:(id)sender
-{
+- (IBAction)selectImageFormat:(id)sender {
     switch ([[sender selectedItem] tag]) {
         case IMAGEFORMAT_PNG:
             [_app_controller setImageFormatPNG:YES];
@@ -596,8 +541,7 @@
     }
 }
 
-- (void)registHotkeysFromDefaults
-{
+- (void)registHotkeysFromDefaults {
     NSNumber* number;
     Hotkey *hotkey;
     
@@ -612,8 +556,7 @@
     
 }
 
-- (BOOL)hotkeyShouldChange:(Hotkey*)hotkey
-{
+- (BOOL)hotkeyShouldChange:(Hotkey*)hotkey {
     [_hotkey_register registHotkey:hotkey];
     [UserDefaults setValue:[hotkey numberValue] forKey:UDKEY_HOT_KEY];
     [UserDefaults save];
@@ -621,41 +564,37 @@
     return YES;
 }
 
-- (IBAction)resetHotkey:(id)sender
-{
+- (IBAction)resetHotkey:(id)sender {
     [_hotkey_register unregistAll];
     [UserDefaults resetValueForKey:UDKEY_HOT_KEY];
     [self registHotkeysFromDefaults];
 }
 
-- (void)applicationWillTerminate
-{
+- (void)applicationWillTerminate {
     [_hotkey_register unregistAll];
 }
 
 #pragma mark -
 #pragma mark Window Delegate
-- (void)windowWillClose:(NSNotification *)notification
-{
+
+- (void)windowWillClose:(NSNotification *)notification {
     [_hotkey_text endEdit];
 }
-- (BOOL)windowShouldClose:(id)window
-{
+
+- (BOOL)windowShouldClose:(id)window {
 //    NSLog(@"- (BOOL)windowShouldClose:(id)window");
     return YES;
 }
 
-- (void)windowDidResignKey:(NSNotification *)notification
-{
+- (void)windowDidResignKey:(NSNotification *)notification {
 //    NSLog(@"- (void)windowDidResignKey:(NSNotification *)notification");
 }
 
-- (void)windowWillMove:(NSNotification *)notification
-{
+- (void)windowWillMove:(NSNotification *)notification {
 //    NSLog(@"- (void)windowWillMove:(NSNotification *)notification");
 }
-- (void)windowDidBecomeKey:(NSNotification *)notification
-{
+
+- (void)windowDidBecomeKey:(NSNotification *)notification {
     NSString* item_identifier = [_toolbar selectedItemIdentifier];
     
     if ([item_identifier isEqualToString:TOOLBAR_GENERAL]) {
@@ -663,12 +602,10 @@
     }
 }
 
-
-
 #pragma mark -
 #pragma mark Autostart on login
-- (BOOL)isEnableLoginItem
-{
+
+- (BOOL)isEnableLoginItem {
     BOOL is_enable = NO;
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
     
@@ -691,8 +628,7 @@
 }
 
 
-- (void)enableLoginItem
-{
+- (void)enableLoginItem {
     CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath: [[NSBundle mainBundle] bundlePath]];
     
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
@@ -704,8 +640,7 @@
     CFRelease(loginItems);
 }
 
-- (void)disableLoginItem
-{
+- (void)disableLoginItem {
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
     UInt32 seedValue;
     NSArray  *loginItemsArray = (NSArray *)CFBridgingRelease(LSSharedFileListCopySnapshot(loginItems, &seedValue));
@@ -724,8 +659,7 @@
     CFRelease(loginItems);
 }
 
-- (IBAction)clickAutostartCheckbox:(id)sender
-{
+- (IBAction)clickAutostartCheckbox:(id)sender {
     if ([sender intValue] == 1) {
         // add
         [self enableLoginItem];
@@ -735,8 +669,7 @@
     }
 }    
 
-- (void)updateToolbarOnGeneral
-{
+- (void)updateToolbarOnGeneral {
     if ([self isEnableLoginItem]) {
         [_autostart_checkbox setIntValue:1];
     } else {

@@ -8,11 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface Screen : NSObject
 
-@interface Screen : NSObject {
-	NSRect _frame;
-	NSRect _menu_frame;
-}
 + (Screen*)defaultScreen;
 - (NSRect)frame;
 - (NSRect)menuScreenFrame;

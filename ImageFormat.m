@@ -10,14 +10,13 @@
 #import "UserDefaults.h"
 
 @implementation ImageFormat
-+ (NSString*)imageFormatDescription
-{
+
++ (NSString*)imageFormatDescription {
     int image_format = [[UserDefaults valueForKey:UDKEY_IMAGE_FORMAT] intValue];
     return [self imageFormatDescriptionWith:image_format];
 }
 
-+ (NSString*)imageFormatDescriptionWith:(int)image_format
-{
++ (NSString*)imageFormatDescriptionWith:(int)image_format {
     NSString* imageFormatDescription;
     switch (image_format) {
         case IMAGEFORMAT_PNG:
@@ -39,8 +38,8 @@
 // p.x is center point (not left point)
 #define IMAGEFORMAT_PADDING_X 3.0
 #define IMAGEFORMAT_PADDING_Y 1.5
-+ (void)drawImageFormatDisplayAt:(NSPoint)p
-{
+
++ (void)drawImageFormatDisplayAt:(NSPoint)p {
     NSString *imageFormatStr = [self imageFormatDescription];
     NSMutableDictionary *stringAttributes = [NSMutableDictionary dictionary];
     

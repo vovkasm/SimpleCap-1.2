@@ -15,8 +15,7 @@
 //
 // main
 //
-+ (void)setup
-{
++ (void)setup {
 	NSString* path = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	path = [path stringByAppendingPathComponent:DEFAULT_IMAGE_FOLDER];
 	
@@ -63,43 +62,38 @@
 	[[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initial_values];
 }
 
-+ (NSUserDefaults*)values
-{
++ (NSUserDefaults*)values {
 	return [[NSUserDefaultsController sharedUserDefaultsController] values];
 }
 
-+ (id)valueForKey:(NSString*)key
-{
++ (id)valueForKey:(NSString*)key {
 	return [[self values] valueForKey:key];
 }
 
-+ (void)setValue:(id)value forKey:(NSString*)key
-{
++ (void)setValue:(id)value forKey:(NSString*)key {
 	[[self values] setValue:value forKey:key];
 }
-+ (void)save
-{
-	[(NSUserDefaultsController*)[NSUserDefaultsController sharedUserDefaultsController] save:self];
+
++ (void)save {
+	[[NSUserDefaultsController sharedUserDefaultsController] save:self];
 }
 
-+ (void)resetValueForKey:(NSString*)key
-{
++ (void)resetValueForKey:(NSString*)key {
 	NSDictionary* initial_values = [[NSUserDefaultsController sharedUserDefaultsController] initialValues];
 	id initial_value = [initial_values valueForKey:key];
 	[self setValue:initial_value forKey:key];
 	[self save];
 }
 
-+ (void)addObserver:(id)observer forKey:(NSString*)key
-{
++ (void)addObserver:(id)observer forKey:(NSString*)key {
 	[[NSUserDefaultsController sharedUserDefaultsController]
 	 addObserver:observer
 	 forKeyPath:[@"values." stringByAppendingString:key]
 	 options:NSKeyValueObservingOptionNew
 	 context:nil];
 }
-+ (void)removeObserver:(id)observer forKey:(NSString*)key
-{
+
++ (void)removeObserver:(id)observer forKey:(NSString*)key {
 	[[NSUserDefaultsController sharedUserDefaultsController]
 	 removeObserver:observer
 	 forKeyPath:[@"values." stringByAppendingString:key]];	

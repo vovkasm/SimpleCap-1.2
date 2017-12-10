@@ -8,9 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface ApplicationIconTransformer : NSValueTransformer {
-
-}
+@interface ApplicationIconTransformer : NSValueTransformer
 
 @end

@@ -8,9 +8,5 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface ApplicationNameFormatter : NSFormatter {
-
-}
-
+@interface ApplicationNameFormatter : NSFormatter
 @end

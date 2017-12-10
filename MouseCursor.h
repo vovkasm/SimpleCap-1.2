@@ -8,13 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface MouseCursor : NSObject
 
-@interface MouseCursor : NSObject {
-
-	NSImage*	_image;
-	NSPoint		_location;
-	NSPoint		_hot_spot;
-}
 + (MouseCursor*)mouseCursor;
 - (NSImage*)image;
 - (NSSize)size;

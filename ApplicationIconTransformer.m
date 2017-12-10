@@ -8,17 +8,14 @@
 
 #import "ApplicationIconTransformer.h"
 
-
 @implementation ApplicationIconTransformer
 
-+ (Class)transformedValueClass
-{
++ (Class)transformedValueClass {
     return [NSImage class];
 }
 
-- (id)transformedValue:(id)value
-{
-	if (!value) {
+- (id)transformedValue:(id)value {
+	if (value == nil) {
 		return  nil;
 	}
 	return [[NSWorkspace sharedWorkspace] iconForFile:value];
